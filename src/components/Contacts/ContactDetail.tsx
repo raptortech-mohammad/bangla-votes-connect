@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { User, Phone, Mail, MapPin, Edit, MessageSquare } from "lucide-react";
+import { User, Phone, Mail, MapPin, Edit, MessageSquare, Plus } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 // Dummy data for demonstration

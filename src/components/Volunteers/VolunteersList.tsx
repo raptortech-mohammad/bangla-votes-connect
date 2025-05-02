@@ -17,6 +17,8 @@ import {
   Phone,
   Calendar,
   Clock,
+  MapPin,
+  Users,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
