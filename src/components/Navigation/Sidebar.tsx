@@ -9,6 +9,7 @@ import {
   UserCheck,
   LineChart,
   Settings,
+  Database,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -70,6 +71,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
       to: "/volunteers",
       icon: <UserCheck size={20} />,
       label: "Volunteers",
+    },
+    {
+      to: "/data-tools",
+      icon: <Database size={20} />,
+      label: "Data Tools",
     },
     {
       to: "/analytics",

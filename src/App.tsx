@@ -11,6 +11,10 @@ import ContactDetail from "./pages/ContactDetail";
 import Campaigns from "./pages/Campaigns";
 import Volunteers from "./pages/Volunteers";
 import Analytics from "./pages/Analytics";
+import DataTools from "./pages/DataTools";
+import ProfilesPage from "./pages/DataTools/ProfilesPage";
+import CustomFieldsPage from "./pages/DataTools/CustomFieldsPage";
+import TimelinePage from "./pages/DataTools/TimelinePage";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +31,10 @@ const App = () => (
           <Route path="/campaigns" element={<Campaigns />} />
           <Route path="/volunteers" element={<Volunteers />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/data-tools" element={<DataTools />} />
+          <Route path="/data-tools/profiles" element={<ProfilesPage />} />
+          <Route path="/data-tools/custom-fields" element={<CustomFieldsPage />} />
+          <Route path="/data-tools/timeline" element={<TimelinePage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
