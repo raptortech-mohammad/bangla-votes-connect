@@ -15,32 +15,37 @@ import DataTools from "./pages/DataTools";
 import ProfilesPage from "./pages/DataTools/ProfilesPage";
 import CustomFieldsPage from "./pages/DataTools/CustomFieldsPage";
 import TimelinePage from "./pages/DataTools/TimelinePage";
+import React from "react";
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/contacts" element={<Contacts />} />
-          <Route path="/contacts/:id" element={<ContactDetail />} />
-          <Route path="/campaigns" element={<Campaigns />} />
-          <Route path="/volunteers" element={<Volunteers />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/data-tools" element={<DataTools />} />
-          <Route path="/data-tools/profiles" element={<ProfilesPage />} />
-          <Route path="/data-tools/custom-fields" element={<CustomFieldsPage />} />
-          <Route path="/data-tools/timeline" element={<TimelinePage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+// Create a new QueryClient instance inside the component
+const App = () => {
+  // Create a QueryClient instance inside the component
+  const queryClient = new QueryClient();
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/contacts" element={<Contacts />} />
+            <Route path="/contacts/:id" element={<ContactDetail />} />
+            <Route path="/campaigns" element={<Campaigns />} />
+            <Route path="/volunteers" element={<Volunteers />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/data-tools" element={<DataTools />} />
+            <Route path="/data-tools/profiles" element={<ProfilesPage />} />
+            <Route path="/data-tools/custom-fields" element={<CustomFieldsPage />} />
+            <Route path="/data-tools/timeline" element={<TimelinePage />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
