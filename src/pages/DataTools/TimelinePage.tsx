@@ -1,156 +1,89 @@
-
 import React from "react";
 import MainLayout from "@/components/Layout/MainLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, Calendar, Phone, Mail, Users, MessageSquare, Filter } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-
-// Mock timeline data
-const timelineEvents = [
-  {
-    id: "1",
-    date: "2023-04-15T14:30:00",
-    type: "meeting",
-    description: "District committee meeting in Dhaka-7",
-    contacts: ["Rahima Begum", "Abdul Karim"],
-    notes: "Discussed campaign strategy for upcoming local elections",
-    tags: ["Meeting", "Committee", "Strategy"]
-  },
-  {
-    id: "2",
-    date: "2023-04-12T10:15:00",
-    type: "phoneCall",
-    description: "Phone bank campaign for Rajshahi-1",
-    contacts: ["Mohammad Ali"],
-    notes: "Contacted 45 potential voters, 28 positive responses",
-    tags: ["Phone Bank", "Voter Contact", "Rajshahi"]
-  },
-  {
-    id: "3",
-    date: "2023-04-10T16:00:00",
-    type: "email",
-    description: "Monthly newsletter sent to all members",
-    contacts: ["All Members"],
-    notes: "Included updates on policy positions and upcoming events",
-    tags: ["Email", "Newsletter", "Mass Communication"]
-  },
-  {
-    id: "4",
-    date: "2023-04-05T09:00:00",
-    type: "event",
-    description: "Community cleanup in Khulna-4",
-    contacts: ["Nusrat Jahan", "Multiple Volunteers"],
-    notes: "20 volunteers participated, good media coverage",
-    tags: ["Event", "Community Service", "Media"]
-  },
-  {
-    id: "5",
-    date: "2023-04-01T11:30:00",
-    type: "message",
-    description: "SMS campaign about voter registration",
-    contacts: ["First-time Voters"],
-    notes: "Sent to 500 contacts, 150 clicked the registration link",
-    tags: ["SMS", "Voter Registration", "Youth Outreach"]
-  }
-];
+import { Clock, CalendarDays, MessageSquare, Phone, Calendar, Filter } from "lucide-react";
 
 const TimelinePage = () => {
-  const getEventIcon = (type: string) => {
-    switch (type) {
-      case "meeting": return <Users className="h-5 w-5 text-blue-500" />;
-      case "phoneCall": return <Phone className="h-5 w-5 text-green-500" />;
-      case "email": return <Mail className="h-5 w-5 text-purple-500" />;
-      case "event": return <Calendar className="h-5 w-5 text-orange-500" />;
-      case "message": return <MessageSquare className="h-5 w-5 text-teal-500" />;
-      default: return <Clock className="h-5 w-5 text-gray-500" />;
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB', { 
-      day: 'numeric', 
-      month: 'short', 
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
   return (
     <MainLayout title="Engagement Timeline">
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="w-full sm:max-w-md">
-            <Input placeholder="Search timeline events..." />
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-bold">Engagement History</h2>
+            <p className="text-muted-foreground">View and analyze historical engagement data in chronological order</p>
           </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="All event types" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All event types</SelectItem>
-                <SelectItem value="meeting">Meetings</SelectItem>
-                <SelectItem value="phoneCall">Phone Calls</SelectItem>
-                <SelectItem value="email">Emails</SelectItem>
-                <SelectItem value="event">Events</SelectItem>
-                <SelectItem value="message">Messages</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex gap-2">
             <Button variant="outline" className="flex items-center gap-2">
               <Filter className="h-4 w-4" />
-              Filters
+              Filter Events
             </Button>
-            <Button>Add Event</Button>
+            <Button className="flex items-center gap-2">
+              <Clock className="h-4 w-4" />
+              Log New Event
+            </Button>
           </div>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Engagement Timeline</CardTitle>
-            <CardDescription>
-              History of all interactions, communications, and activities
-            </CardDescription>
+            <Tabs defaultValue="all" className="w-full">
+              <TabsList>
+                <TabsTrigger value="all" className="flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  All Events
+                </TabsTrigger>
+                <TabsTrigger value="calls" className="flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  Calls
+                </TabsTrigger>
+                <TabsTrigger value="messages" className="flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  Messages
+                </TabsTrigger>
+                <TabsTrigger value="events" className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  Events
+                </TabsTrigger>
+                <TabsTrigger value="meetings" className="flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4" />
+                  Meetings
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           </CardHeader>
           <CardContent>
-            <div className="relative space-y-0">
-              {/* Timeline line */}
-              <div className="absolute left-8 top-4 bottom-4 w-px bg-border" />
-
-              {timelineEvents.map((event) => (
-                <div key={event.id} className="relative flex gap-4 pb-8">
-                  {/* Timeline icon */}
-                  <div className="relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-background border border-border">
-                    {getEventIcon(event.type)}
-                  </div>
-
-                  {/* Event content */}
-                  <div className="flex-grow pt-2">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <h3 className="font-medium">{event.description}</h3>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-xs">
-                          {formatDate(event.date)}
-                        </Badge>
+            {/* Placeholder for timeline implementation */}
+            <div className="space-y-8 py-4">
+              {/* Sample Timeline Events */}
+              {[1, 2, 3, 4, 5].map((index) => (
+                <div key={index} className="relative pl-8 pb-8 border-l border-gray-200">
+                  <div className="absolute -left-2 mt-1.5 h-4 w-4 rounded-full bg-primary"></div>
+                  <div className="bg-card border rounded-lg p-4 shadow-sm">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h3 className="font-medium text-lg">
+                          {index % 2 === 0 ? "Phone Call with Abdul Karim" : "Campaign Event Attendance"}
+                        </h3>
+                        <p className="text-muted-foreground text-sm">
+                          {index % 2 === 0 ? "Phone" : "Event"} • {new Date().toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs">
+                        {index % 2 === 0 ? "Call" : "Event"}
                       </div>
                     </div>
-
-                    <p className="text-muted-foreground my-2">{event.notes}</p>
-                    
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {event.tags.map(tag => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    <div className="text-xs text-muted-foreground mt-2">
-                      Contacts: {event.contacts.join(", ")}
+                    <p className="text-sm">
+                      {index % 2 === 0
+                        ? "Discussed upcoming campaign rally and confirmed attendance."
+                        : "Attended the community outreach program and volunteered to help with registration."}
+                    </p>
+                    <div className="flex justify-between items-center mt-4">
+                      <div className="text-xs text-muted-foreground">
+                        Added by: Samira Ahmed
+                      </div>
+                      <Button variant="ghost" size="sm">View Details</Button>
                     </div>
                   </div>
                 </div>

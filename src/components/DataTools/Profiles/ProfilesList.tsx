@@ -1,178 +1,163 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
-import { MoreHorizontal, User, Star } from "lucide-react";
 import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Badge, 
+  CheckCircle2, 
+  CircleAlert, 
+  CircleDashed, 
+  User 
+} from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Badge as UIBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-interface Profile {
-  id: string;
-  name: string;
-  type: string;
-  email: string;
-  phone: string;
-  district: string;
-  constituency: string;
-  tags: string[];
-  lastContact: string;
-  engagementScore: number;
-}
-
 interface ProfilesListProps {
-  profiles: Profile[];
+  profiles: Array<{
+    id: string;
+    name: string;
+    type: string;
+    email: string;
+    phone: string;
+    district: string;
+    constituency: string;
+    tags: string[];
+    lastContact: string;
+    engagementScore: number;
+  }>;
   searchTerm: string;
+  onProfileClick: (profileId: string) => void;
 }
 
-const ProfilesList: React.FC<ProfilesListProps> = ({ profiles, searchTerm }) => {
+const ProfilesList: React.FC<ProfilesListProps> = ({ 
+  profiles, 
+  searchTerm,
+  onProfileClick 
+}) => {
   // Filter profiles based on search term
-  const filteredProfiles = profiles.filter(profile => 
-    profile.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    profile.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    profile.phone.includes(searchTerm) ||
-    profile.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    profile.constituency.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    profile.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredProfiles = searchTerm 
+    ? profiles.filter(
+        (profile) => 
+          profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          profile.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          profile.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          profile.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          profile.constituency.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : profiles;
 
-  // Function to get engagement color based on score
-  const getEngagementColor = (score: number) => {
-    if (score >= 80) return "bg-green-500";
-    if (score >= 60) return "bg-yellow-500";
-    if (score >= 40) return "bg-orange-500";
-    return "bg-red-500";
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
   };
 
-  // Function to format date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const getEngagementIcon = (score: number) => {
+    if (score >= 70) return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+    if (score >= 40) return <CircleDashed className="h-4 w-4 text-amber-500" />;
+    return <CircleAlert className="h-4 w-4 text-red-500" />;
   };
 
   return (
-    <>
-      {filteredProfiles.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-10">
-          <User className="h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold">No profiles found</h3>
-          <p className="text-muted-foreground text-sm">Try adjusting your search or filters</p>
-        </div>
-      ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>District & Constituency</TableHead>
-              <TableHead>Tags</TableHead>
-              <TableHead>Last Contact</TableHead>
-              <TableHead>Engagement</TableHead>
-              <TableHead className="w-[80px]"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredProfiles.map((profile) => (
-              <TableRow key={profile.id}>
-                <TableCell>
-                  <div className="flex items-center gap-3">
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-gray-200">
+            <th className="px-4 py-3 text-left font-medium text-gray-500">Name</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-500">Contact Info</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-500">Location</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-500">Tags</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-500">Last Contact</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-500">Engagement</th>
+            <th className="px-4 py-3 text-center font-medium text-gray-500">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredProfiles.length === 0 ? (
+            <tr>
+              <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                No profiles found matching your search.
+              </td>
+            </tr>
+          ) : (
+            filteredProfiles.map((profile) => (
+              <tr 
+                key={profile.id} 
+                className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                onClick={() => onProfileClick(profile.id)}
+              >
+                <td className="px-4 py-3">
+                  <div className="flex items-center space-x-3">
                     <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-primary/10 text-primary">
-                        {profile.name.split(" ").map(n => n[0]).join("")}
+                      <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                        {getInitials(profile.name)}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <Link to={`/data-tools/profiles/${profile.id}`} className="font-medium hover:underline">
-                        {profile.name}
-                      </Link>
-                      <div className="text-xs text-muted-foreground">
-                        {profile.email}
-                      </div>
+                      <div className="font-medium">{profile.name}</div>
+                      <div className="text-xs text-muted-foreground">{profile.type}</div>
                     </div>
                   </div>
-                </TableCell>
-                <TableCell>
-                  <Badge variant={profile.type === "Member" ? "default" : "outline"}>
-                    {profile.type}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm">
-                    {profile.district}
-                    <div className="text-xs text-muted-foreground">
-                      {profile.constituency}
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
+                </td>
+                <td className="px-4 py-3">
+                  <div className="text-xs text-muted-foreground">{profile.email}</div>
+                  <div>{profile.phone}</div>
+                </td>
+                <td className="px-4 py-3">
+                  <div>{profile.district}</div>
+                  <div className="text-xs text-muted-foreground">{profile.constituency}</div>
+                </td>
+                <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-1">
                     {profile.tags.slice(0, 2).map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
+                      <UIBadge key={tag} variant="outline" className="text-xs">
                         {tag}
-                      </Badge>
+                      </UIBadge>
                     ))}
                     {profile.tags.length > 2 && (
-                      <Badge variant="secondary" className="text-xs">
+                      <UIBadge variant="outline" className="text-xs">
                         +{profile.tags.length - 2}
-                      </Badge>
+                      </UIBadge>
                     )}
                   </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{formatDate(profile.lastContact)}</span>
-                </TableCell>
-                <TableCell>
+                </td>
+                <td className="px-4 py-3">
+                  <div>{profile.lastContact}</div>
+                </td>
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <div className={`h-2 w-16 rounded-full bg-gray-200`}>
-                      <div 
-                        className={`h-2 rounded-full ${getEngagementColor(profile.engagementScore)}`}
-                        style={{ width: `${profile.engagementScore}%` }}
-                      ></div>
-                    </div>
-                    <span className="text-xs font-medium">{profile.engagementScore}</span>
+                    {getEngagementIcon(profile.engagementScore)}
+                    <span>{profile.engagementScore}%</span>
                   </div>
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>View Profile</DropdownMenuItem>
-                      <DropdownMenuItem>Edit Profile</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Log Interaction</DropdownMenuItem>
-                      <DropdownMenuItem>Send Message</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-destructive">Delete Profile</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                </td>
+                <td className="px-4 py-3 text-center">
+                  <div className="flex justify-center">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-8 w-8 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onProfileClick(profile.id);
+                      }}
+                    >
+                      <User className="h-4 w-4" />
+                      <span className="sr-only">View Profile</span>
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+      {filteredProfiles.length > 0 && (
+        <div className="px-4 py-3 text-sm text-muted-foreground">
+          Showing {filteredProfiles.length} of {profiles.length} profiles
+        </div>
       )}
-    </>
+    </div>
   );
 };
 

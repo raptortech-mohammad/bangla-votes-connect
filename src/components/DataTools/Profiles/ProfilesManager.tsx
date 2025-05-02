@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProfilesList from "./ProfilesList";
 import ProfileFilters from "./ProfileFilters";
+import ProfileView from "./ProfileView";
 
 // Mock data for profiles
 const mockProfiles = [
@@ -83,6 +84,23 @@ const ProfilesManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
+  const [selectedProfile, setSelectedProfile] = useState<typeof mockProfiles[0] | null>(null);
+
+  const handleProfileClick = (profileId: string) => {
+    const profile = mockProfiles.find(p => p.id === profileId);
+    if (profile) {
+      setSelectedProfile(profile);
+    }
+  };
+
+  const handleCloseProfile = () => {
+    setSelectedProfile(null);
+  };
+
+  // If a profile is selected, show the profile view
+  if (selectedProfile) {
+    return <ProfileView profile={selectedProfile} onClose={handleCloseProfile} />;
+  }
 
   return (
     <div className="space-y-6">
@@ -145,30 +163,38 @@ const ProfilesManager = () => {
             </div>
           </div>
           <TabsContent value="all">
-            <ProfilesList profiles={mockProfiles} searchTerm={searchTerm} />
+            <ProfilesList 
+              profiles={mockProfiles} 
+              searchTerm={searchTerm} 
+              onProfileClick={handleProfileClick}
+            />
           </TabsContent>
           <TabsContent value="supporters">
             <ProfilesList 
               profiles={mockProfiles.filter(p => p.type === "Supporter")} 
               searchTerm={searchTerm} 
+              onProfileClick={handleProfileClick}
             />
           </TabsContent>
           <TabsContent value="members">
             <ProfilesList 
               profiles={mockProfiles.filter(p => p.type === "Member")} 
               searchTerm={searchTerm} 
+              onProfileClick={handleProfileClick}
             />
           </TabsContent>
           <TabsContent value="volunteers">
             <ProfilesList 
               profiles={mockProfiles.filter(p => p.type === "Volunteer")} 
               searchTerm={searchTerm} 
+              onProfileClick={handleProfileClick}
             />
           </TabsContent>
           <TabsContent value="citizens">
             <ProfilesList 
               profiles={mockProfiles.filter(p => p.type === "Citizen")} 
               searchTerm={searchTerm} 
+              onProfileClick={handleProfileClick}
             />
           </TabsContent>
         </Tabs>
