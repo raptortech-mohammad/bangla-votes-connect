@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,21 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom CRM colors
+				"brand-green": "#0D8A4F",
+				"brand-red": "#F42A41",
+				"brand-gold": "#FFD700",
+				"brand-gray": {
+					100: "#F7F9FC",
+					200: "#EDF2F7",
+					300: "#E2E8F0",
+					400: "#CBD5E0",
+					500: "#A0AEC0",
+					600: "#718096",
+					700: "#4A5568",
+					800: "#2D3748",
+					900: "#1A202C",
 				}
 			},
 			borderRadius: {
@@ -84,11 +100,20 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					from: { opacity: '0' },
+					to: { opacity: '1' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.3s ease-in-out'
+			},
+			fontFamily: {
+				sans: ['Inter', 'system-ui', 'sans-serif'],
+				bangla: ['Hind Siliguri', 'sans-serif']
 			}
 		}
 	},
