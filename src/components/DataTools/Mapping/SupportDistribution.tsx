@@ -1,6 +1,8 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { supportDistributionData } from "./mockData";
 
 const SupportDistribution: React.FC = () => {
   return (
@@ -9,11 +11,29 @@ const SupportDistribution: React.FC = () => {
         <CardTitle className="text-base">Support Distribution</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[200px] flex items-center justify-center bg-muted/20 rounded">
-          {/* Placeholder for pie chart */}
-          <div className="text-center text-muted-foreground">
-            <p className="text-sm">Distribution chart will appear here</p>
-          </div>
+        <div className="h-[200px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={supportDistributionData}
+                cx="50%"
+                cy="50%"
+                outerRadius={70}
+                fill="#8884d8"
+                dataKey="value"
+                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                labelLine={false}
+              >
+                {supportDistributionData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip 
+                formatter={(value) => [`${value}%`, ""]}
+                contentStyle={{ borderRadius: "8px", padding: "8px 12px", fontSize: "12px" }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
         </div>
         <div className="mt-4 space-y-2">
           <div className="flex justify-between items-center text-sm">
