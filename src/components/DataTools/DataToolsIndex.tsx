@@ -98,22 +98,22 @@ const DataToolsIndex = () => {
       icon: <MapPin className="h-5 w-5 text-primary" />,
       to: "/data-tools/mapping",
       status: "available" as const,
-      phase: 2
+      phase: 3
     },
     {
       title: "Field Data Collection",
       description: "Collect and analyze data from canvassing and field operations.",
       icon: <FileText className="h-5 w-5 text-primary" />,
       to: "/data-tools/field-data",
-      status: "coming-soon" as const,
-      phase: 2
+      status: "available" as const,
+      phase: 3
     },
     {
       title: "Segmentation & Analytics",
       description: "Create custom segments and generate insights from your data.",
       icon: <PieChart className="h-5 w-5 text-primary" />,
       to: "/data-tools/segmentation",
-      status: "coming-soon" as const,
+      status: "available" as const,
       phase: 3
     },
     {
