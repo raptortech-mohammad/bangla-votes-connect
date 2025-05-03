@@ -9,7 +9,8 @@ import {
   FileText, 
   PieChart, 
   Smartphone, 
-  Link as LinkIcon 
+  Link as LinkIcon,
+  Search 
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -96,7 +97,7 @@ const DataToolsIndex = () => {
       description: "Visualize supporter data on maps with district and constituency boundaries.",
       icon: <MapPin className="h-5 w-5 text-primary" />,
       to: "/data-tools/mapping",
-      status: "coming-soon" as const,
+      status: "available" as const,
       phase: 2
     },
     {
