@@ -8,7 +8,8 @@ import {
   Upload,
   MapPin,
   Users,
-  Home
+  Home,
+  Search
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
