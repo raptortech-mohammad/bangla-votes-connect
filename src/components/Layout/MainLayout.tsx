@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 interface MainLayoutProps {
   children: ReactNode;
-  title: string;
+  title: ReactNode; // Changed from string to ReactNode to accept JSX elements
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children, title }) => {
