@@ -4,7 +4,10 @@ import React from "react";
 interface BangladeshMapProps {
   activeDistrict: string | null;
   setActiveDistrict: (id: string | null) => void;
+  onDistrictClick?: (id: string | null) => void;
   mapMode: string;
+  compareMode?: boolean;
+  selectedDistricts?: string[];
 }
 
 // Define district data for the map
@@ -81,10 +84,22 @@ const districtsMap = [
   }
 ];
 
-const BangladeshMap: React.FC<BangladeshMapProps> = ({ activeDistrict, setActiveDistrict, mapMode }) => {
+const BangladeshMap: React.FC<BangladeshMapProps> = ({ 
+  activeDistrict, 
+  setActiveDistrict, 
+  onDistrictClick,
+  mapMode,
+  compareMode = false,
+  selectedDistricts = [] 
+}) => {
   
   // Helper function to get color based on popularity and map mode
   const getDistrictColor = (district: typeof districtsMap[0]) => {
+    // In compare mode, highlight selected districts
+    if (compareMode && selectedDistricts.includes(district.id)) {
+      return district.baseColor;
+    }
+    
     if (district.id === activeDistrict) {
       // Highlight color on hover
       return district.baseColor;
@@ -170,13 +185,18 @@ const BangladeshMap: React.FC<BangladeshMapProps> = ({ activeDistrict, setActive
               d={district.path}
               fill={getDistrictColor(district)}
               stroke={mapMode === "satellite" ? "#fff" : "#475569"}
-              strokeWidth={district.id === activeDistrict ? "1.8" : "1"}
+              strokeWidth={
+                compareMode && selectedDistricts.includes(district.id) ? "2" :
+                district.id === activeDistrict ? "1.8" : "1"
+              }
               onMouseEnter={() => setActiveDistrict(district.id)}
               onMouseLeave={() => setActiveDistrict(null)}
+              onClick={() => onDistrictClick?.(district.id)}
               style={{ 
-                cursor: 'pointer', 
+                cursor: compareMode ? 'pointer' : 'default', 
                 transition: 'fill 0.3s ease, stroke-width 0.3s ease',
-                filter: district.id === activeDistrict && mapMode === "satellite" 
+                filter: (district.id === activeDistrict || 
+                  (compareMode && selectedDistricts.includes(district.id))) && mapMode === "satellite" 
                   ? 'drop-shadow(0 0 5px rgba(255,255,255,0.7))' 
                   : 'none' 
               }}
@@ -206,8 +226,14 @@ const BangladeshMap: React.FC<BangladeshMapProps> = ({ activeDistrict, setActive
                   y={centerY}
                   textAnchor="middle"
                   fontSize="10"
-                  fontWeight={district.id === activeDistrict ? "bold" : "normal"}
-                  fill={district.id === activeDistrict ? "#1e293b" : "#64748b"}
+                  fontWeight={
+                    (compareMode && selectedDistricts.includes(district.id)) || 
+                    district.id === activeDistrict ? "bold" : "normal"
+                  }
+                  fill={
+                    compareMode && selectedDistricts.includes(district.id) ? "#1e293b" :
+                    district.id === activeDistrict ? "#1e293b" : "#64748b"
+                  }
                   style={{
                     textShadow: '0px 1px 2px rgba(255,255,255,0.5)',
                     pointerEvents: 'none'
@@ -241,15 +267,61 @@ const BangladeshMap: React.FC<BangladeshMapProps> = ({ activeDistrict, setActive
                 const centerX = pathPoints.reduce((sum, p) => sum + p.x, 0) / pathPoints.length;
                 const centerY = pathPoints.reduce((sum, p) => sum + p.y, 0) / pathPoints.length;
                 
+                const isSelected = compareMode && selectedDistricts?.includes(district.id);
+                
                 return (
                   <circle 
                     key={`marker-${district.id}`}
                     cx={centerX}
                     cy={centerY}
-                    r="2"
-                    fill={district.id === activeDistrict ? district.baseColor : "#fff"}
-                    opacity={district.id === activeDistrict ? "1" : "0.6"}
+                    r={isSelected ? "3" : "2"}
+                    fill={
+                      isSelected ? district.baseColor :
+                      district.id === activeDistrict ? district.baseColor : "#fff"
+                    }
+                    opacity={isSelected || district.id === activeDistrict ? "1" : "0.6"}
                   />
+                );
+              }
+              return null;
+            })}
+            
+            {/* Selection indicators for compare mode */}
+            {compareMode && selectedDistricts?.map((id, index) => {
+              const district = districtsMap.find(d => d.id === id);
+              if (district) {
+                // Find district center
+                const pathPoints = district.path.split(" ")
+                  .filter(p => p.match(/^\d+(\.\d+)?,\d+(\.\d+)?$/))
+                  .map(p => {
+                    const [x, y] = p.split(",").map(Number);
+                    return { x, y };
+                  });
+                
+                const centerX = pathPoints.reduce((sum, p) => sum + p.x, 0) / pathPoints.length;
+                const centerY = pathPoints.reduce((sum, p) => sum + p.y, 0) / pathPoints.length - 15;
+                
+                return (
+                  <g key={`selection-${id}`}>
+                    <circle
+                      cx={centerX}
+                      cy={centerY}
+                      r="10"
+                      fill={district.baseColor}
+                      stroke="#fff"
+                      strokeWidth="1"
+                    />
+                    <text
+                      x={centerX}
+                      y={centerY + 4}
+                      textAnchor="middle"
+                      fill="#fff"
+                      fontSize="10"
+                      fontWeight="bold"
+                    >
+                      {index + 1}
+                    </text>
+                  </g>
                 );
               }
               return null;
