@@ -5,45 +5,34 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { toast } from "sonner";
+import BangladeshMap from "./BangladeshMap";
 
 // Define Bangladesh districts with support data
 const districtData = [
-  { id: "dhaka", name: "Dhaka", path: "M320,280 L335,265 L350,275 L365,265 L380,280 L365,295 L350,305 L330,300 L320,280", supporters: 3200000, coordinators: 145, popularity: "high", baseColor: "#f59e0b" },
-  { id: "chittagong", name: "Chittagong", path: "M470,330 L500,280 L520,290 L525,320 L510,350 L490,370 L475,350 L470,330", supporters: 2100000, coordinators: 98, popularity: "medium", baseColor: "#10b981" },
-  { id: "rajshahi", name: "Rajshahi", path: "M150,200 L200,180 L230,200 L220,230 L190,240 L160,230 L150,200", supporters: 1100000, coordinators: 67, popularity: "medium", baseColor: "#f97316" },
-  { id: "khulna", name: "Khulna", path: "M200,320 L230,300 L250,315 L260,340 L240,360 L210,350 L200,320", supporters: 980000, coordinators: 54, popularity: "medium", baseColor: "#8b5cf6" },
-  { id: "sylhet", name: "Sylhet", path: "M430,180 L460,170 L480,190 L475,220 L450,230 L430,210 L430,180", supporters: 780000, coordinators: 43, popularity: "low", baseColor: "#ec4899" },
-  { id: "barisal", name: "Barisal", path: "M280,370 L310,350 L330,370 L320,400 L290,410 L270,390 L280,370", supporters: 650000, coordinators: 38, popularity: "low", baseColor: "#3b82f6" },
-  { id: "rangpur", name: "Rangpur", path: "M180,120 L220,100 L250,120 L240,150 L210,160 L180,150 L180,120", supporters: 840000, coordinators: 49, popularity: "medium", baseColor: "#84cc16" },
-  { id: "mymensingh", name: "Mymensingh", path: "M300,200 L340,180 L360,200 L350,230 L320,240 L290,230 L300,200", supporters: 720000, coordinators: 41, popularity: "low", baseColor: "#06b6d4" }
+  { id: "dhaka", name: "Dhaka", supporters: 3200000, coordinators: 145, popularity: "high", baseColor: "#f59e0b" },
+  { id: "chittagong", name: "Chittagong", supporters: 2100000, coordinators: 98, popularity: "medium", baseColor: "#10b981" },
+  { id: "rajshahi", name: "Rajshahi", supporters: 1100000, coordinators: 67, popularity: "medium", baseColor: "#f97316" },
+  { id: "khulna", name: "Khulna", supporters: 980000, coordinators: 54, popularity: "medium", baseColor: "#8b5cf6" },
+  { id: "sylhet", name: "Sylhet", supporters: 780000, coordinators: 43, popularity: "low", baseColor: "#ec4899" },
+  { id: "barisal", name: "Barisal", supporters: 650000, coordinators: 38, popularity: "low", baseColor: "#3b82f6" },
+  { id: "rangpur", name: "Rangpur", supporters: 840000, coordinators: 49, popularity: "medium", baseColor: "#84cc16" },
+  { id: "mymensingh", name: "Mymensingh", supporters: 720000, coordinators: 41, popularity: "low", baseColor: "#06b6d4" }
 ];
 
 const MapDisplay: React.FC = () => {
   const [activeDistrict, setActiveDistrict] = useState<string | null>(null);
-  const [mapImage, setMapImage] = useState<string>("public/lovable-uploads/f7cb777d-968e-4dc0-98ad-8016a3898153.png");
+  const [activeTab, setActiveTab] = useState<string>("standard");
   
   const handleDistrictHover = (districtId: string | null) => {
     setActiveDistrict(districtId);
   };
 
-  // Helper function to get color shade based on popularity
-  const getDistrictColor = (district: typeof districtData[0]) => {
-    if (district.id === activeDistrict) {
-      // Highlight color on hover
-      return district.baseColor;
-    }
-    
-    // Default colors based on popularity
-    switch (district.popularity) {
-      case "high":
-        return `${district.baseColor}40`; // 25% opacity
-      case "medium":
-        return `${district.baseColor}30`; // 19% opacity
-      case "low":
-        return `${district.baseColor}20`; // 12% opacity
-      default:
-        return "#e5e7eb";
-    }
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    toast(`Switched to ${value} view`, {
+      duration: 2000,
+    });
   };
 
   // Get supporter percentage
@@ -59,7 +48,12 @@ const MapDisplay: React.FC = () => {
         <div className="flex justify-between items-center">
           <CardTitle>Bangladesh Electoral Map</CardTitle>
           <div className="flex items-center gap-2">
-            <Tabs defaultValue="standard" className="w-[360px]">
+            <Tabs 
+              defaultValue="standard" 
+              className="w-[360px]"
+              value={activeTab}
+              onValueChange={handleTabChange}
+            >
               <TabsList className="grid grid-cols-3">
                 <TabsTrigger value="standard">Standard</TabsTrigger>
                 <TabsTrigger value="heatmap">Heatmap</TabsTrigger>
@@ -104,70 +98,12 @@ const MapDisplay: React.FC = () => {
       </CardHeader>
       <CardContent>
         <div className="flex items-center justify-center h-[500px] bg-slate-100 rounded-md border relative overflow-hidden">
-          {/* Interactive SVG Map */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <svg width="100%" height="100%" viewBox="0 0 650 500" className="absolute inset-0">
-              {/* Background Map Image - Transparent */}
-              <image
-                href={mapImage}
-                x="0"
-                y="0"
-                width="650"
-                height="500"
-                style={{ opacity: 0.2 }}
-              />
-              
-              {/* Interactive Districts */}
-              <g>
-                {districtData.map((district) => (
-                  <path
-                    key={district.id}
-                    d={district.path}
-                    fill={getDistrictColor(district)}
-                    stroke="#475569"
-                    strokeWidth="1.5"
-                    onMouseEnter={() => handleDistrictHover(district.id)}
-                    onMouseLeave={() => handleDistrictHover(null)}
-                    style={{ 
-                      cursor: 'pointer', 
-                      transition: 'fill 0.3s ease',
-                      filter: district.id === activeDistrict ? 'drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))' : 'none' 
-                    }}
-                  />
-                ))}
-              </g>
-              
-              {/* District Labels */}
-              <g>
-                {districtData.map((district) => {
-                  // Calculate center point of path for label placement
-                  const pathPoints = district.path.split(" ")
-                    .filter(p => p.match(/^\d+,\d+$/))
-                    .map(p => {
-                      const [x, y] = p.split(",").map(Number);
-                      return { x, y };
-                    });
-                  
-                  const centerX = pathPoints.reduce((sum, p) => sum + p.x, 0) / pathPoints.length;
-                  const centerY = pathPoints.reduce((sum, p) => sum + p.y, 0) / pathPoints.length;
-                  
-                  return (
-                    <text
-                      key={`label-${district.id}`}
-                      x={centerX}
-                      y={centerY}
-                      textAnchor="middle"
-                      fontSize="12"
-                      fontWeight={district.id === activeDistrict ? "bold" : "normal"}
-                      fill={district.id === activeDistrict ? "#1e293b" : "#64748b"}
-                    >
-                      {district.name}
-                    </text>
-                  );
-                })}
-              </g>
-            </svg>
-          </div>
+          {/* Real Bangladesh Map */}
+          <BangladeshMap 
+            activeDistrict={activeDistrict}
+            setActiveDistrict={handleDistrictHover}
+            mapMode={activeTab}
+          />
           
           {/* Info overlay for active district */}
           {activeDistrict && (
