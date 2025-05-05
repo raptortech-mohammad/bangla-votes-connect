@@ -16,6 +16,8 @@ import ProfilesPage from "./pages/DataTools/ProfilesPage";
 import CustomFieldsPage from "./pages/DataTools/CustomFieldsPage";
 import TimelinePage from "./pages/DataTools/TimelinePage";
 import MappingPage from "./pages/DataTools/MappingPage";
+import FieldDataPage from "./pages/DataTools/FieldDataPage";
+import SegmentationPage from "./pages/DataTools/SegmentationPage";
 import React from "react";
 
 // Create a new QueryClient instance inside the component
@@ -41,6 +43,8 @@ const App = () => {
             <Route path="/data-tools/custom-fields" element={<CustomFieldsPage />} />
             <Route path="/data-tools/timeline" element={<TimelinePage />} />
             <Route path="/data-tools/mapping" element={<MappingPage />} />
+            <Route path="/data-tools/field-data" element={<FieldDataPage />} />
+            <Route path="/data-tools/segmentation" element={<SegmentationPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

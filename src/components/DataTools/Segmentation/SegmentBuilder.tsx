@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Calendar, 
@@ -6,7 +5,6 @@ import {
   Database, 
   Filter, 
   Fingerprint, 
-  Geography, 
   Map,
   Plus, 
   Save, 
@@ -23,6 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
 
 const SegmentBuilder: React.FC = () => {
   const [conditions, setConditions] = useState([
@@ -33,6 +32,9 @@ const SegmentBuilder: React.FC = () => {
   const [segmentName, setSegmentName] = useState('');
   const [segmentDescription, setSegmentDescription] = useState('');
   const [conditionGroup, setConditionGroup] = useState('all'); // 'all' or 'any'
+  
+  // Initialize form with react-hook-form
+  const form = useForm();
   
   const addCondition = () => {
     const newId = conditions.length > 0 ? Math.max(...conditions.map(c => c.id)) + 1 : 1;
@@ -76,8 +78,8 @@ const SegmentBuilder: React.FC = () => {
             <CardTitle>Create New Segment</CardTitle>
           </CardHeader>
           <CardContent>
-            <Form>
-              <div className="space-y-6">
+            <Form {...form}>
+              <form className="space-y-6">
                 <div className="grid grid-cols-1 gap-4">
                   <FormItem>
                     <FormLabel>Segment Name</FormLabel>
@@ -249,16 +251,16 @@ const SegmentBuilder: React.FC = () => {
                 </div>
                 
                 <div className="flex justify-between gap-4 pt-2">
-                  <Button variant="outline" className="w-1/2">
+                  <Button variant="outline" className="w-1/2" type="button">
                     <X className="h-4 w-4 mr-2" />
                     Cancel
                   </Button>
-                  <Button className="w-1/2">
+                  <Button className="w-1/2" type="button">
                     <Save className="h-4 w-4 mr-2" />
                     Save Segment
                   </Button>
                 </div>
-              </div>
+              </form>
             </Form>
           </CardContent>
         </Card>
