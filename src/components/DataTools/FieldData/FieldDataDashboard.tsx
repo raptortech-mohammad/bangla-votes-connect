@@ -22,10 +22,19 @@ import FieldSurveyList from "./FieldSurveyList";
 import CanvassingMap from "./CanvassingMap";
 import FieldDataStats from "./FieldDataStats";
 import ResponseAnalytics from "./ResponseAnalytics";
+import CreateFieldDataForm from "./CreateFieldDataForm";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogHeader, 
+  DialogTitle 
+} from "@/components/ui/dialog";
 
 const FieldDataDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("surveys");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false);
   
   return (
     <div className="space-y-6">
@@ -74,7 +83,10 @@ const FieldDataDashboard: React.FC = () => {
             <Download className="h-4 w-4" />
             Export
           </Button>
-          <Button className="flex items-center gap-2">
+          <Button 
+            className="flex items-center gap-2"
+            onClick={() => setIsCreateDialogOpen(true)}
+          >
             <Plus className="h-4 w-4" />
             Create New
           </Button>
@@ -171,6 +183,18 @@ const FieldDataDashboard: React.FC = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Create New Field Data Form</DialogTitle>
+            <DialogDescription>
+              Design a new survey or data collection form for your field operations.
+            </DialogDescription>
+          </DialogHeader>
+          <CreateFieldDataForm onClose={() => setIsCreateDialogOpen(false)} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
