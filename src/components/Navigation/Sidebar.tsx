@@ -106,13 +106,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     label: "Settings"
   }];
   return <div className="h-full bg-sidebar fixed w-64 shadow-lg z-10 flex flex-col transition-all duration-300 ease-in-out">
-      <div className="p-4 border-b border-white/20 flex items-center justify-center rounded py-[10px] px-[10px]">
+      <div className="p-4 border-b border-white/20 flex items-center justify-center rounded py-[10px] px-[12px]">
         {collapsed ? <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white">
             <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="w-8 h-8 object-contain" />
-          </div> : <div className="flex items-center justify-center p-2 rounded-md bg-red-600">
+          </div> : <div className="flex items-center justify-center p-2 rounded-md bg-red-600 py-[12px] px-[29px]">
             <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="h-8 object-contain" />
             <div className="ml-2">
-              <h1 className="text-brand-red font-extrabold text-2xl text-slate-50">BNP</h1>
+              <h1 className="text-brand-red font-extrabold text-2xl text-slate-50 text-left">BNP</h1>
               <p className="text-xs text-gray-200">Political CRM</p>
             </div>
           </div>}
