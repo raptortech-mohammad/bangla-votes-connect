@@ -1,57 +1,48 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
+
+import Dashboard from "./pages/Dashboard";
 import Contacts from "./pages/Contacts";
-import ContactDetail from "./pages/ContactDetail";
 import Campaigns from "./pages/Campaigns";
 import Volunteers from "./pages/Volunteers";
-import Analytics from "./pages/Analytics";
 import DataTools from "./pages/DataTools";
+import Analytics from "./pages/Analytics";
+import NotFound from "./pages/NotFound";
+import ContactDetail from "./pages/ContactDetail";
+
+// Data Tools sub-pages
 import ProfilesPage from "./pages/DataTools/ProfilesPage";
 import CustomFieldsPage from "./pages/DataTools/CustomFieldsPage";
 import TimelinePage from "./pages/DataTools/TimelinePage";
 import MappingPage from "./pages/DataTools/MappingPage";
 import FieldDataPage from "./pages/DataTools/FieldDataPage";
 import SegmentationPage from "./pages/DataTools/SegmentationPage";
-import React from "react";
+import MobileIntegrationPage from "./pages/DataTools/MobileIntegrationPage";
 
-// Create a new QueryClient instance inside the component
-const App = () => {
-  // Create a QueryClient instance inside the component
-  const queryClient = new QueryClient();
-  
+function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/contacts" element={<Contacts />} />
-            <Route path="/contacts/:id" element={<ContactDetail />} />
-            <Route path="/campaigns" element={<Campaigns />} />
-            <Route path="/volunteers" element={<Volunteers />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/data-tools" element={<DataTools />} />
-            <Route path="/data-tools/profiles" element={<ProfilesPage />} />
-            <Route path="/data-tools/custom-fields" element={<CustomFieldsPage />} />
-            <Route path="/data-tools/timeline" element={<TimelinePage />} />
-            <Route path="/data-tools/mapping" element={<MappingPage />} />
-            <Route path="/data-tools/field-data" element={<FieldDataPage />} />
-            <Route path="/data-tools/segmentation" element={<SegmentationPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/contacts" element={<Contacts />} />
+        <Route path="/contacts/:contactId" element={<ContactDetail />} />
+        <Route path="/campaigns" element={<Campaigns />} />
+        <Route path="/volunteers" element={<Volunteers />} />
+        <Route path="/data-tools" element={<DataTools />} />
+        <Route path="/data-tools/profiles" element={<ProfilesPage />} />
+        <Route path="/data-tools/custom-fields" element={<CustomFieldsPage />} />
+        <Route path="/data-tools/timeline" element={<TimelinePage />} />
+        <Route path="/data-tools/mapping" element={<MappingPage />} />
+        <Route path="/data-tools/field-data" element={<FieldDataPage />} />
+        <Route path="/data-tools/segmentation" element={<SegmentationPage />} />
+        <Route path="/data-tools/mobile" element={<MobileIntegrationPage />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;

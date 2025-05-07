@@ -121,7 +121,7 @@ const DataToolsIndex = () => {
       description: "Connect with mobile apps for field data collection and canvassing.",
       icon: <Smartphone className="h-5 w-5 text-primary" />,
       to: "/data-tools/mobile",
-      status: "coming-soon" as const,
+      status: "available" as const,
       phase: 4
     },
     {
