@@ -11,6 +11,7 @@ import DataTools from "./pages/DataTools";
 import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 import ContactDetail from "./pages/ContactDetail";
+import SocialMedia from "./pages/SocialMedia";
 
 // Data Tools sub-pages
 import ProfilesPage from "./pages/DataTools/ProfilesPage";
@@ -39,6 +40,7 @@ function App() {
         <Route path="/data-tools/segmentation" element={<SegmentationPage />} />
         <Route path="/data-tools/mobile" element={<MobileIntegrationPage />} />
         <Route path="/analytics" element={<Analytics />} />
+        <Route path="/social-media" element={<SocialMedia />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

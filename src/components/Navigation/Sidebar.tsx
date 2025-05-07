@@ -2,7 +2,19 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, Calendar, UserCheck, LineChart, Settings, Database } from "lucide-react";
+import { 
+  LayoutDashboard, 
+  Users, 
+  Calendar, 
+  UserCheck, 
+  LineChart, 
+  Settings, 
+  Database,
+  Facebook,
+  Instagram,
+  Twitter,
+  Linkedin
+} from "lucide-react";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -14,6 +26,7 @@ interface NavItemProps {
   label: string;
   collapsed: boolean;
   active: boolean;
+  subItems?: { to: string; label: string; icon?: React.ReactNode }[];
 }
 
 const NavItem: React.FC<NavItemProps> = ({
@@ -21,22 +34,56 @@ const NavItem: React.FC<NavItemProps> = ({
   icon,
   label,
   collapsed,
-  active
+  active,
+  subItems
 }) => {
+  const location = useLocation();
+  const [expanded, setExpanded] = React.useState(active);
+  
+  const hasActiveSubItem = subItems?.some(item => location.pathname === item.to);
+  const isActive = active || hasActiveSubItem;
+  
   return (
-    <Link 
-      to={to} 
-      className={cn(
-        "flex items-center py-3 px-4 rounded-md transition-all duration-200", 
-        collapsed ? "justify-center px-2" : "pr-6", 
-        active 
-          ? "bg-white text-sidebar-primary-foreground" 
-          : "text-sidebar-foreground hover:bg-white/20"
+    <div>
+      <Link 
+        to={to} 
+        className={cn(
+          "flex items-center py-3 px-4 rounded-md transition-all duration-200", 
+          collapsed ? "justify-center px-2" : "pr-6", 
+          isActive 
+            ? "bg-white text-sidebar-primary-foreground" 
+            : "text-sidebar-foreground hover:bg-white/20"
+        )}
+        onClick={() => {
+          if (subItems && !collapsed) {
+            setExpanded(!expanded);
+          }
+        }}
+      >
+        <span className="mr-3">{icon}</span>
+        {!collapsed && <span className="font-medium">{label}</span>}
+      </Link>
+      
+      {subItems && expanded && !collapsed && (
+        <div className="ml-10 mt-1 space-y-1">
+          {subItems.map((subItem) => (
+            <Link 
+              key={subItem.to}
+              to={subItem.to}
+              className={cn(
+                "flex items-center py-2 px-3 rounded-md text-sm transition-all duration-200",
+                location.pathname === subItem.to 
+                  ? "bg-white/10 text-white" 
+                  : "text-white/80 hover:bg-white/10"
+              )}
+            >
+              {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
+              <span>{subItem.label}</span>
+            </Link>
+          ))}
+        </div>
       )}
-    >
-      <span className="mr-3">{icon}</span>
-      {!collapsed && <span className="font-medium">{label}</span>}
-    </Link>
+    </div>
   );
 };
 
@@ -69,7 +116,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
       to: "/data-tools",
       icon: <Database size={20} />,
       label: "Data Tools"
-    }, 
+    },
+    {
+      to: "/social-media",
+      icon: <Facebook size={20} />,
+      label: "Social Media",
+      subItems: [
+        {
+          to: "/social-media",
+          label: "Dashboard",
+          icon: <LayoutDashboard size={16} />
+        },
+        {
+          to: "/social-media?tab=facebook",
+          label: "Facebook",
+          icon: <Facebook size={16} />
+        },
+        {
+          to: "/social-media?tab=instagram",
+          label: "Instagram",
+          icon: <Instagram size={16} />
+        },
+        {
+          to: "/social-media?tab=twitter",
+          label: "Twitter",
+          icon: <Twitter size={16} />
+        },
+        {
+          to: "/social-media?tab=linkedin",
+          label: "LinkedIn",
+          icon: <Linkedin size={16} />
+        }
+      ]
+    },
     {
       to: "/analytics",
       icon: <LineChart size={20} />,
@@ -112,6 +191,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 label={item.label} 
                 collapsed={collapsed} 
                 active={location.pathname === item.to} 
+                subItems={item.subItems}
               />
             </li>
           ))}
