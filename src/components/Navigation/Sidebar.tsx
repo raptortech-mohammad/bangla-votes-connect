@@ -106,7 +106,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     label: "Settings"
   }];
   return <div className="h-full bg-sidebar fixed w-64 shadow-lg z-10 flex flex-col transition-all duration-300 ease-in-out">
-      <div className="p-4 border-b border-white/20 flex items-center justify-center">
+      <div className="p-4 border-b border-white/20 flex items-center justify-center rounded py-[10px] px-[10px]">
         {collapsed ? <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white text-brand-red font-bold text-lg">
             B
           </div> : <div className="flex items-center">
