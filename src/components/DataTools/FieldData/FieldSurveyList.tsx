@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Calendar, FileText, MoreHorizontal, Users, Edit, Copy, Share2, Trash, ExternalLink, CheckCircle, HelpCircle, BarChart4, ChevronRight, Tag } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -57,7 +58,7 @@ const mockSurveys = [
     topQuestions: [
       { question: 'Which policy issue matters most to you?', responseRate: 98 },
       { question: 'How likely are you to vote in the upcoming election?', responseRate: 100 },
-      { question: 'Are you familiar with our candidate's platform?', responseRate: 95 },
+      { question: "Are you familiar with our candidate's platform?", responseRate: 95 },
     ],
     demographicData: {
       ageGroups: [
