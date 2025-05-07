@@ -110,7 +110,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {collapsed ? <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white text-brand-red font-bold text-lg">
             B
           </div> : <div className="flex items-center">
-            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white text-brand-red font-bold text-lg mr-2">
+            <div className="w-8 h-8 flex items-center justify-center bg-white text-brand-red font-bold text-lg mr-2 rounded-none">
               B
             </div>
             <div>
