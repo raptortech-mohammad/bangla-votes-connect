@@ -109,7 +109,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-4 border-b border-white/20 flex items-center justify-center rounded py-[10px] px-[12px]">
         {collapsed ? <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white">
             <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="w-8 h-8 object-contain" />
-          </div> : <div className="flex items-center justify-center p-2 rounded-md bg-red-600 py-[12px] px-[29px]">
+          </div> : <div className="flex items-center justify-center p-2 rounded-md py-[12px] px-[29px] bg-[#d21e2d]">
             <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="h-8 object-contain" />
             <div className="ml-2">
               <h1 className="text-brand-red font-extrabold text-2xl text-slate-50 text-left">BNP</h1>
