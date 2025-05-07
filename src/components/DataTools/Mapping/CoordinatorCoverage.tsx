@@ -9,7 +9,7 @@ const coverageData = [
   { name: "Uncovered Areas", value: 22 }
 ];
 
-const COLORS = ["#4ade80", "#f97316"];
+const COLORS = ["#10b981", "#f97316"];
 
 const CoordinatorCoverage: React.FC = () => {
   return (
@@ -47,14 +47,14 @@ const CoordinatorCoverage: React.FC = () => {
         <div className="mt-4 space-y-1">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 bg-emerald-400 rounded-full"></span>
+              <span className="w-3 h-3 bg-emerald-500 rounded-full"></span>
               <span>Total Field Coordinators</span>
             </div>
             <span className="font-medium">535</span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 bg-emerald-400 rounded-full"></span>
+              <span className="w-3 h-3 bg-emerald-500 rounded-full"></span>
               <span>Areas Covered</span>
             </div>
             <span className="font-medium">78%</span>
@@ -64,7 +64,7 @@ const CoordinatorCoverage: React.FC = () => {
               <span className="w-3 h-3 bg-orange-500 rounded-full"></span>
               <span>Uncovered Areas</span>
             </div>
-            <span className="font-medium text-amber-600">37</span>
+            <span className="font-medium text-orange-600">37</span>
           </div>
         </div>
       </CardContent>

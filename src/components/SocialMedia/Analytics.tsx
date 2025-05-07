@@ -42,57 +42,71 @@ const postPerformanceData = [
   { name: 'Post 5', engagement: 325, reach: 4800, shares: 38 }
 ];
 
+// Enhanced platform colors
+const PLATFORM_COLORS = {
+  facebook: "#4267B2",
+  instagram: "#E1306C",
+  twitter: "#1DA1F2", 
+  linkedin: "#0077B5"
+};
+
+const METRIC_COLORS = {
+  engagement: "#8B5CF6",
+  reach: "#10B981",
+  shares: "#F59E0B"
+};
+
 const SocialMediaAnalytics: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
+        <Card className="bg-gradient-to-br from-blue-50 to-blue-100">
           <CardHeader className="pb-2">
             <CardDescription>Total Followers</CardDescription>
             <CardTitle className="text-2xl">29,500</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <Users className="text-primary h-4 w-4 mr-2" />
+              <Users className="text-blue-600 h-4 w-4 mr-2" />
               <span className="text-xs text-green-600">+5.2% from last month</span>
             </div>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="bg-gradient-to-br from-pink-50 to-pink-100">
           <CardHeader className="pb-2">
             <CardDescription>Engagement Rate</CardDescription>
             <CardTitle className="text-2xl">3.8%</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <MessageCircle className="text-primary h-4 w-4 mr-2" />
+              <MessageCircle className="text-pink-600 h-4 w-4 mr-2" />
               <span className="text-xs text-green-600">+0.5% from last month</span>
             </div>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="bg-gradient-to-br from-purple-50 to-purple-100">
           <CardHeader className="pb-2">
             <CardDescription>Conversion Rate</CardDescription>
             <CardTitle className="text-2xl">2.1%</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <UserCheck className="text-primary h-4 w-4 mr-2" />
+              <UserCheck className="text-purple-600 h-4 w-4 mr-2" />
               <span className="text-xs text-green-600">+0.3% from last month</span>
             </div>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100">
           <CardHeader className="pb-2">
             <CardDescription>Total Impressions</CardDescription>
             <CardTitle className="text-2xl">152K</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <TrendingUp className="text-primary h-4 w-4 mr-2" />
+              <TrendingUp className="text-emerald-600 h-4 w-4 mr-2" />
               <span className="text-xs text-green-600">+12% from last month</span>
             </div>
           </CardContent>
@@ -120,10 +134,10 @@ const SocialMediaAnalytics: React.FC = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="facebook" stroke="#1877F2" activeDot={{ r: 8 }} />
-                  <Line type="monotone" dataKey="instagram" stroke="#E4405F" />
-                  <Line type="monotone" dataKey="twitter" stroke="#1DA1F2" />
-                  <Line type="monotone" dataKey="linkedin" stroke="#0A66C2" />
+                  <Line type="monotone" dataKey="facebook" stroke={PLATFORM_COLORS.facebook} strokeWidth={2} activeDot={{ r: 8 }} />
+                  <Line type="monotone" dataKey="instagram" stroke={PLATFORM_COLORS.instagram} strokeWidth={2} />
+                  <Line type="monotone" dataKey="twitter" stroke={PLATFORM_COLORS.twitter} strokeWidth={2} />
+                  <Line type="monotone" dataKey="linkedin" stroke={PLATFORM_COLORS.linkedin} strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -144,10 +158,35 @@ const SocialMediaAnalytics: React.FC = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="facebook" stroke="#1877F2" activeDot={{ r: 8 }} />
-                  <Line type="monotone" dataKey="instagram" stroke="#E4405F" />
-                  <Line type="monotone" dataKey="twitter" stroke="#1DA1F2" />
-                  <Line type="monotone" dataKey="linkedin" stroke="#0A66C2" />
+                  <Line 
+                    type="monotone" 
+                    dataKey="facebook" 
+                    stroke={PLATFORM_COLORS.facebook} 
+                    strokeWidth={2}
+                    activeDot={{ r: 8 }}
+                    dot={{ strokeWidth: 2 }} 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="instagram" 
+                    stroke={PLATFORM_COLORS.instagram}
+                    strokeWidth={2}
+                    dot={{ strokeWidth: 2 }} 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="twitter" 
+                    stroke={PLATFORM_COLORS.twitter} 
+                    strokeWidth={2}
+                    dot={{ strokeWidth: 2 }} 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="linkedin" 
+                    stroke={PLATFORM_COLORS.linkedin} 
+                    strokeWidth={2}
+                    dot={{ strokeWidth: 2 }} 
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -168,8 +207,8 @@ const SocialMediaAnalytics: React.FC = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="engagement" fill="#CE2029" />
-                  <Bar dataKey="shares" fill="#0A66C2" />
+                  <Bar dataKey="engagement" fill={METRIC_COLORS.engagement} radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="shares" fill={METRIC_COLORS.shares} radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>

@@ -24,7 +24,7 @@ const FieldDataStats: React.FC = () => {
     { date: 'Apr', surveys: 2045, canvassing: 3290, events: 770 },
   ];
 
-  // Chart configuration
+  // Chart configuration with enhanced colors
   const chartConfig: ChartConfig = {
     surveys: {
       label: 'Surveys',
@@ -174,21 +174,21 @@ const FieldDataStats: React.FC = () => {
                   dataKey="surveys"
                   stackId="a"
                   fill="var(--color-surveys)"
-                  radius={[0, 0, 0, 0]}
+                  radius={[4, 4, 0, 0]}
                   barSize={20}
                 />
                 <Bar
                   dataKey="canvassing"
                   stackId="a"
                   fill="var(--color-canvassing)"
-                  radius={[0, 0, 0, 0]}
+                  radius={[4, 4, 0, 0]}
                   barSize={20}
                 />
                 <Bar
                   dataKey="events"
                   stackId="a"
                   fill="var(--color-events)"
-                  radius={[0, 0, 0, 0]}
+                  radius={[4, 4, 0, 0]}
                   barSize={20}
                 />
                 <ChartLegend

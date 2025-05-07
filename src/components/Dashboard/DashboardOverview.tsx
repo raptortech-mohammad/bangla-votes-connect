@@ -47,12 +47,12 @@ const RecentActivities = () => {
               <div
                 className={`w-2 h-2 rounded-full mr-3 ${
                   activity.type === "volunteer"
-                    ? "bg-brand-green"
+                    ? "bg-emerald-500"
                     : activity.type === "campaign"
-                    ? "bg-brand-gold"
+                    ? "bg-amber-500"
                     : activity.type === "contact"
-                    ? "bg-brand-red"
-                    : "bg-brand-gray-500"
+                    ? "bg-rose-500"
+                    : "bg-blue-500"
                 }`}
               />
               <div className="flex-1">
@@ -101,7 +101,7 @@ const UpcomingEvents = () => {
           {events.map((event) => (
             <li
               key={event.id}
-              className="border-l-2 border-brand-green pl-3 py-1"
+              className="border-l-2 border-emerald-500 pl-3 py-1"
             >
               <p className="font-medium">{event.title}</p>
               <div className="text-xs text-brand-gray-500 mt-1">
@@ -128,11 +128,11 @@ const CampaignProgress = () => {
           <div>
             <div className="flex justify-between mb-1">
               <span className="text-sm font-medium">Voter Outreach</span>
-              <span className="text-sm text-brand-gray-500">65%</span>
+              <span className="text-sm text-emerald-600">65%</span>
             </div>
-            <div className="w-full bg-brand-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-200 rounded-full h-2">
               <div
-                className="bg-brand-green h-2 rounded-full"
+                className="bg-emerald-500 h-2 rounded-full"
                 style={{ width: "65%" }}
               ></div>
             </div>
@@ -141,11 +141,11 @@ const CampaignProgress = () => {
           <div>
             <div className="flex justify-between mb-1">
               <span className="text-sm font-medium">Donations Target</span>
-              <span className="text-sm text-brand-gray-500">42%</span>
+              <span className="text-sm text-amber-600">42%</span>
             </div>
-            <div className="w-full bg-brand-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-200 rounded-full h-2">
               <div
-                className="bg-brand-gold h-2 rounded-full"
+                className="bg-amber-500 h-2 rounded-full"
                 style={{ width: "42%" }}
               ></div>
             </div>
@@ -154,11 +154,11 @@ const CampaignProgress = () => {
           <div>
             <div className="flex justify-between mb-1">
               <span className="text-sm font-medium">Volunteer Recruitment</span>
-              <span className="text-sm text-brand-gray-500">78%</span>
+              <span className="text-sm text-rose-600">78%</span>
             </div>
-            <div className="w-full bg-brand-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-200 rounded-full h-2">
               <div
-                className="bg-brand-red h-2 rounded-full"
+                className="bg-rose-500 h-2 rounded-full"
                 style={{ width: "78%" }}
               ></div>
             </div>
@@ -178,24 +178,28 @@ const DashboardOverview: React.FC = () => {
           value="12,546"
           trend={8.4}
           icon={<Users size={24} />}
+          className="bg-gradient-to-br from-blue-50 to-blue-100"
         />
         <StatCard
           title="Active Campaigns"
           value="4"
           trend={0}
           icon={<Calendar size={24} />}
+          className="bg-gradient-to-br from-amber-50 to-amber-100"
         />
         <StatCard
           title="Total Volunteers"
           value="237"
           trend={12.6}
           icon={<UserCheck size={24} />}
+          className="bg-gradient-to-br from-emerald-50 to-emerald-100"
         />
         <StatCard
           title="Messages Sent"
           value="8,942"
           trend={-2.3}
           icon={<Mail size={24} />}
+          className="bg-gradient-to-br from-purple-50 to-purple-100"
         />
       </div>
 

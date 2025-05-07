@@ -2,6 +2,7 @@
 import React, { ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
 
 interface StatCardProps {
   title: string;
@@ -27,13 +28,20 @@ const StatCard: React.FC<StatCardProps> = ({
             <h3 className="text-2xl font-bold mt-1">{value}</h3>
             {trend !== undefined && (
               <div className="flex items-center mt-2">
+                {trend > 0 ? (
+                  <ArrowUpRight className="h-3 w-3 text-emerald-500 mr-1" />
+                ) : trend < 0 ? (
+                  <ArrowDownRight className="h-3 w-3 text-rose-500 mr-1" />
+                ) : (
+                  <Minus className="h-3 w-3 text-brand-gray-500 mr-1" />
+                )}
                 <span
                   className={cn(
                     "text-xs font-semibold",
                     trend > 0
-                      ? "text-brand-green"
+                      ? "text-emerald-500"
                       : trend < 0
-                      ? "text-brand-red"
+                      ? "text-rose-500"
                       : "text-brand-gray-500"
                   )}
                 >
@@ -46,7 +54,7 @@ const StatCard: React.FC<StatCardProps> = ({
               </div>
             )}
           </div>
-          {icon && <div className="text-brand-gray-400">{icon}</div>}
+          {icon && <div className="text-brand-primary">{icon}</div>}
         </div>
       </CardContent>
     </Card>
