@@ -17,7 +17,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title }) => {
   };
 
   return (
-    <div className="flex min-h-screen bg-brand-gray-100">
+    <div className="flex min-h-screen bg-background">
       <div
         className={`${
           sidebarOpen ? "w-64" : "w-16"
@@ -32,18 +32,18 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title }) => {
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className="mr-4"
+            className="mr-4 text-brand-red"
           >
             <Menu className="h-5 w-5" />
           </Button>
-          <h1 className="text-2xl font-bold text-brand-gray-800">{title}</h1>
+          <h1 className="text-2xl font-bold text-brand-red">{title}</h1>
         </header>
 
         <main className="flex-1 p-6 overflow-auto">
           {children}
         </main>
 
-        <footer className="py-4 px-6 border-t border-brand-gray-200 text-center text-brand-gray-500 text-sm">
+        <footer className="py-4 px-6 border-t border-gray-200 text-center text-gray-500 text-sm">
           বাংলা-ভোটস-কানেক্ট © {new Date().getFullYear()} - Political CRM
         </footer>
       </div>

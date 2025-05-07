@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -64,9 +63,7 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				// Custom CRM colors
-				"brand-green": "#0D8A4F",
-				"brand-red": "#F42A41",
-				"brand-gold": "#FFD700",
+				"brand-red": "#CE2029",
 				"brand-gray": {
 					100: "#F7F9FC",
 					200: "#EDF2F7",
