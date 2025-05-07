@@ -2,9 +2,11 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, Users, Calendar, UserCheck, LineChart, Settings, Database, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+
 interface SidebarProps {
   collapsed: boolean;
 }
+
 interface NavItemProps {
   to: string;
   icon: React.ReactNode;
@@ -17,6 +19,7 @@ interface NavItemProps {
     icon?: React.ReactNode;
   }[];
 }
+
 const NavItem: React.FC<NavItemProps> = ({
   to,
   icon,
@@ -47,77 +50,104 @@ const NavItem: React.FC<NavItemProps> = ({
         </div>}
     </div>;
 };
+
 export const Sidebar: React.FC<SidebarProps> = ({
   collapsed
 }) => {
   const location = useLocation();
-  const navigationItems = [{
-    to: "/",
-    icon: <LayoutDashboard size={20} />,
-    label: "Dashboard"
-  }, {
-    to: "/contacts",
-    icon: <Users size={20} />,
-    label: "Contacts"
-  }, {
-    to: "/campaigns",
-    icon: <Calendar size={20} />,
-    label: "Campaigns"
-  }, {
-    to: "/volunteers",
-    icon: <UserCheck size={20} />,
-    label: "Volunteers"
-  }, {
-    to: "/data-tools",
-    icon: <Database size={20} />,
-    label: "Data Tools"
-  }, {
-    to: "/social-media",
-    icon: <Facebook size={20} />,
-    label: "Social Media",
-    subItems: [{
+  const navigationItems = [
+    {
+      to: "/",
+      icon: <LayoutDashboard size={20} />,
+      label: "Dashboard"
+    },
+    {
+      to: "/contacts",
+      icon: <Users size={20} />,
+      label: "Contacts"
+    },
+    {
+      to: "/campaigns",
+      icon: <Calendar size={20} />,
+      label: "Campaigns"
+    },
+    {
+      to: "/volunteers",
+      icon: <UserCheck size={20} />,
+      label: "Volunteers"
+    },
+    {
+      to: "/data-tools",
+      icon: <Database size={20} />,
+      label: "Data Tools"
+    },
+    {
       to: "/social-media",
-      label: "Dashboard",
-      icon: <LayoutDashboard size={16} />
-    }, {
-      to: "/social-media?tab=facebook",
-      label: "Facebook",
-      icon: <Facebook size={16} />
-    }, {
-      to: "/social-media?tab=instagram",
-      label: "Instagram",
-      icon: <Instagram size={16} />
-    }, {
-      to: "/social-media?tab=twitter",
-      label: "Twitter",
-      icon: <Twitter size={16} />
-    }, {
-      to: "/social-media?tab=linkedin",
-      label: "LinkedIn",
-      icon: <Linkedin size={16} />
-    }]
-  }, {
-    to: "/analytics",
-    icon: <LineChart size={20} />,
-    label: "Analytics"
-  }, {
-    to: "/settings",
-    icon: <Settings size={20} />,
-    label: "Settings"
-  }];
+      icon: <Facebook size={20} />,
+      label: "Social Media",
+      subItems: [
+        {
+          to: "/social-media",
+          label: "Dashboard",
+          icon: <LayoutDashboard size={16} />
+        },
+        {
+          to: "/social-media?tab=facebook",
+          label: "Facebook",
+          icon: <Facebook size={16} />
+        },
+        {
+          to: "/social-media?tab=instagram",
+          label: "Instagram",
+          icon: <Instagram size={16} />
+        },
+        {
+          to: "/social-media?tab=twitter",
+          label: "Twitter",
+          icon: <Twitter size={16} />
+        },
+        {
+          to: "/social-media?tab=linkedin",
+          label: "LinkedIn",
+          icon: <Linkedin size={16} />
+        }
+      ]
+    },
+    {
+      to: "/analytics",
+      icon: <LineChart size={20} />,
+      label: "Analytics"
+    },
+    {
+      to: "/settings",
+      icon: <Settings size={20} />,
+      label: "Settings"
+    }
+  ];
+
   return <div className="h-full bg-sidebar fixed w-64 shadow-lg z-10 flex flex-col transition-all duration-300 ease-in-out">
       <div className="p-4 border-b border-white/20 flex items-center justify-center rounded py-[10px] px-[10px]">
-        {collapsed ? <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white text-brand-red font-bold text-lg">
-            B
-          </div> : <div className="flex items-center">
-            <div className="w-8 h-8 flex items-center justify-center bg-white text-brand-red font-bold text-lg mr-2 rounded-none">
-              B
+        {collapsed ? (
+          <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white">
+            <img 
+              src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" 
+              alt="BNP Logo" 
+              className="w-8 h-8 object-contain"
+            />
+          </div>
+        ) : (
+          <div className="flex items-center justify-center bg-white p-2 rounded-md">
+            <img 
+              src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" 
+              alt="BNP Logo" 
+              className="h-8 object-contain"
+            />
+            <div className="ml-2">
+              <h1 className="text-brand-red font-extrabold text-2xl">BNP</h1>
+              <p className="text-xs text-gray-600">Political CRM</p>
             </div>
-            <div>
-              <h1 className="text-white font-extrabold text-2xl text-center">BNP</h1>
-              <p className="text-xs text-white/70">Political CRM</p>
-            </div>
-          </div>}
+          </div>
+        )}
       </div>
 
       <nav className="flex-1 p-2">
