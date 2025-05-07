@@ -109,10 +109,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-4 border-b border-white/20 flex items-center justify-center rounded py-[10px] px-[12px]">
         {collapsed ? <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white">
             <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="w-8 h-8 object-contain" />
-          </div> : <div className="flex items-center justify-center p-2 rounded-md py-[12px] px-[29px] bg-[#d21e2d]">
-            <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="h-8 object-fill" />
+          </div> : <div className="flex items-center justify-center p-2 rounded-md bg-[#d21e2d] px-[15px] py-0">
+            <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="h-8 object-contain" />
             <div className="ml-2 mx-[15px] my-0 rounded-sm">
-              <h1 className="text-brand-red font-extrabold text-2xl text-slate-50 mx-[35px] my-0 px-[9px] py-0 text-left">BNP</h1>
+              <h1 className="text-brand-red text-slate-50 mx-[35px] my-0 px-[9px] py-0 text-left text-base font-semibold">BANGLADESH
+NATIONALIST
+PARTY</h1>
               <p className="text-xs text-gray-200">Political CRM</p>
             </div>
           </div>}
