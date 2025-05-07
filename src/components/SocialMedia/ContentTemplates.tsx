@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Facebook, Instagram, Linkedin, Twitter, ClipboardList, Template } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Twitter, ClipboardList, FileType } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 
@@ -141,7 +141,7 @@ const ContentTemplates: React.FC = () => {
             <ClipboardList className="mr-2 h-4 w-4" /> Your Templates
           </TabsTrigger>
           <TabsTrigger value="create">
-            <Template className="mr-2 h-4 w-4" /> Create Template
+            <FileType className="mr-2 h-4 w-4" /> Create Template
           </TabsTrigger>
         </TabsList>
         
