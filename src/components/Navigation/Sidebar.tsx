@@ -112,10 +112,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div> : <div className="flex items-center justify-center p-2 rounded-md bg-[#d21e2d] py-0 px-[22px] my-0 mx-[57px]">
             <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="h-8 object-contain" />
             <div className="ml-2 my-0 rounded-sm mx-0">
-              <h1 className="text-brand-red text-slate-50 my-0 py-0 text-base font-semibold text-center px-0 mx-[15px]">BANGLADESH
+              <h1 className="text-brand-red text-slate-50 my-0 py-0 text-base font-semibold px-0 mx-[15px] text-left">BANGLADESH
 NATIONALIST
 PARTY</h1>
-              <p className="text-xs text-gray-200 text-center">Political CRM</p>
+              <p className="text-gray-200 text-xs px-[7px] py-0 text-left"></p>
             </div>
           </div>}
       </div>
