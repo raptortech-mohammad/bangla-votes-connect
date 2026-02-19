@@ -1,380 +1,309 @@
 
 import React, { useState } from "react";
-import { Map, MapPin, Layers, Info, Download, Maximize2, BarChart2 } from "lucide-react";
+import { Map, Download, Maximize2, BarChart2, Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import BangladeshMap from "./BangladeshMap";
-import { useNavigate } from "react-router-dom";
+import BangladeshDotMap, { divisionsData } from "./BangladeshDotMap";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
-// Define Bangladesh districts with support data
-const districtData = [
-  { id: "dhaka", name: "Dhaka", supporters: 3200000, coordinators: 145, popularity: "high", baseColor: "#f59e0b" },
-  { id: "chittagong", name: "Chittagong", supporters: 2100000, coordinators: 98, popularity: "medium", baseColor: "#10b981" },
-  { id: "rajshahi", name: "Rajshahi", supporters: 1100000, coordinators: 67, popularity: "medium", baseColor: "#f97316" },
-  { id: "khulna", name: "Khulna", supporters: 980000, coordinators: 54, popularity: "medium", baseColor: "#8b5cf6" },
-  { id: "sylhet", name: "Sylhet", supporters: 780000, coordinators: 43, popularity: "low", baseColor: "#ec4899" },
-  { id: "barisal", name: "Barisal", supporters: 650000, coordinators: 38, popularity: "low", baseColor: "#3b82f6" },
-  { id: "rangpur", name: "Rangpur", supporters: 840000, coordinators: 49, popularity: "medium", baseColor: "#84cc16" },
-  { id: "mymensingh", name: "Mymensingh", supporters: 720000, coordinators: 41, popularity: "low", baseColor: "#06b6d4" }
-];
 
 const MapDisplay: React.FC = () => {
   const [activeDistrict, setActiveDistrict] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string>("standard");
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [compareMode, setCompareMode] = useState<boolean>(false);
   const [selectedDistricts, setSelectedDistricts] = useState<string[]>([]);
   const [exportDialogOpen, setExportDialogOpen] = useState<boolean>(false);
-  
-  const navigate = useNavigate();
-  
-  const handleDistrictHover = (districtId: string | null) => {
-    setActiveDistrict(districtId);
-  };
 
   const handleDistrictClick = (districtId: string | null) => {
     if (!districtId) return;
-    
     if (compareMode) {
-      // In compare mode, toggle selection
       if (selectedDistricts.includes(districtId)) {
-        setSelectedDistricts(selectedDistricts.filter(id => id !== districtId));
+        setSelectedDistricts(selectedDistricts.filter((id) => id !== districtId));
       } else if (selectedDistricts.length < 3) {
-        // Limit to 3 districts for comparison
         setSelectedDistricts([...selectedDistricts, districtId]);
       } else {
-        toast(`Maximum 3 districts can be compared`, {
-          duration: 2000,
-        });
+        toast("Maximum 3 divisions can be compared", { duration: 2000 });
       }
     } else {
-      // In normal mode, show district detail
-      toast(`Viewing ${districtData.find(d => d.id === districtId)?.name} district details`, {
+      toast(`Viewing ${divisionsData.find((d) => d.id === districtId)?.name} division details`, {
         duration: 2000,
       });
-      // This could navigate to a district detail page in the future
     }
   };
 
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    toast(`Switched to ${value} view`, {
-      duration: 2000,
-    });
-  };
-  
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
-    toast(`${!isFullscreen ? "Entered" : "Exited"} fullscreen mode`, {
-      duration: 2000,
-    });
+    toast(`${!isFullscreen ? "Entered" : "Exited"} fullscreen mode`, { duration: 2000 });
   };
-  
+
   const toggleCompareMode = () => {
     setCompareMode(!compareMode);
     if (!compareMode) {
-      toast("Select up to 3 districts to compare", {
-        duration: 3000,
-      });
+      toast("Select up to 3 divisions to compare", { duration: 3000 });
     } else {
       setSelectedDistricts([]);
     }
   };
-  
+
   const handleExport = (format: string) => {
-    toast(`Exporting map data as ${format}...`, {
-      duration: 2000,
-    });
-    
-    // Simulate export delay
+    toast(`Exporting map data as ${format}...`, { duration: 2000 });
     setTimeout(() => {
-      toast.success(`Map data exported successfully as ${format}`, {
-        duration: 2000,
-      });
+      toast.success(`Map data exported as ${format}`, { duration: 2000 });
       setExportDialogOpen(false);
     }, 1500);
   };
 
-  // Get supporter percentage
-  const getSupporterPercentage = (supporters: number) => {
-    // Assuming average district population of 5 million
-    const avgPopulation = 5000000;
-    return Math.round((supporters / avgPopulation) * 100);
-  };
+  const getSupporterPct = (division: typeof divisionsData[0]) =>
+    Math.round((division.supporters / division.totalVoters) * 100);
+
+  const activeDivision = divisionsData.find((d) => d.id === activeDistrict);
 
   return (
-    <Card className={`${isFullscreen ? 'fixed inset-0 z-50 rounded-none h-screen' : 'h-full'}`}>
-      <CardHeader className="pb-3">
-        <div className="flex justify-between items-center">
-          <CardTitle>Bangladesh Electoral Map</CardTitle>
-          <div className="flex items-center gap-2">
-            <Tabs 
-              defaultValue="standard" 
-              className="w-[360px]"
-              value={activeTab}
-              onValueChange={handleTabChange}
+    <Card
+      className={`${
+        isFullscreen ? "fixed inset-0 z-50 rounded-none h-screen" : "h-full"
+      } border-[#1f2937] bg-[#09090b]`}
+    >
+      <CardHeader className="pb-3 border-b border-[#1f2937]">
+        <div className="flex justify-between items-center flex-wrap gap-2">
+          <div className="flex items-center gap-3">
+            <CardTitle className="text-white">BNP Supporters Heatmap</CardTitle>
+            <Badge
+              variant="outline"
+              className="border-green-700 text-green-400 bg-green-950/50 text-[10px] font-semibold tracking-wide"
             >
-              <TabsList className="grid grid-cols-3">
-                <TabsTrigger value="standard">Standard</TabsTrigger>
-                <TabsTrigger value="heatmap">Heatmap</TabsTrigger>
-                <TabsTrigger value="satellite">Satellite</TabsTrigger>
-              </TabsList>
-            </Tabs>
-            
+              DOT MATRIX
+            </Badge>
+          </div>
+          <TooltipProvider>
+          <div className="flex items-center gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="icon"
                   onClick={() => setExportDialogOpen(true)}
+                  className="text-gray-400 hover:text-white hover:bg-[#1f2937]"
                 >
                   <Download className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Export Map</p>
-              </TooltipContent>
+              <TooltipContent>Export Map</TooltipContent>
             </Tooltip>
-            
+
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="icon"
                   onClick={toggleCompareMode}
-                  className={compareMode ? "bg-primary/20" : ""}
+                  className={`text-gray-400 hover:text-white hover:bg-[#1f2937] ${
+                    compareMode ? "bg-green-900/40 text-green-400" : ""
+                  }`}
                 >
                   <BarChart2 className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Compare Districts</p>
-              </TooltipContent>
+              <TooltipContent>Compare Divisions</TooltipContent>
             </Tooltip>
-            
+
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Layers className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Toggle Layers</p>
-              </TooltipContent>
-            </Tooltip>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-gray-400 hover:text-white hover:bg-[#1f2937]"
+                >
                   <Info className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Map Legend</p>
-              </TooltipContent>
+              <TooltipContent>Map Legend</TooltipContent>
             </Tooltip>
-            
+
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="icon"
                   onClick={toggleFullscreen}
+                  className="text-gray-400 hover:text-white hover:bg-[#1f2937]"
                 >
                   <Maximize2 className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</p>
-              </TooltipContent>
+              <TooltipContent>{isFullscreen ? "Exit Fullscreen" : "Fullscreen"}</TooltipContent>
             </Tooltip>
           </div>
+          </TooltipProvider>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className={`flex items-center justify-center ${isFullscreen ? 'h-[calc(100vh-120px)]' : 'h-[500px]'} bg-slate-100 rounded-md border relative overflow-hidden`}>
-          {/* Real Bangladesh Map */}
-          <BangladeshMap 
+
+      <CardContent className="p-0">
+        <div
+          className={`relative overflow-hidden ${
+            isFullscreen ? "h-[calc(100vh-80px)]" : "h-[540px]"
+          } bg-[#09090b]`}
+        >
+          <BangladeshDotMap
             activeDistrict={activeDistrict}
-            setActiveDistrict={handleDistrictHover}
+            setActiveDistrict={setActiveDistrict}
             onDistrictClick={handleDistrictClick}
-            mapMode={activeTab}
-            compareMode={compareMode}
-            selectedDistricts={selectedDistricts}
           />
-          
-          {/* Info overlay for active district */}
-          {activeDistrict && !compareMode && (
-            <div className="absolute top-4 right-4 bg-white/95 p-4 rounded-lg shadow-lg border border-gray-200 max-w-xs animate-fade-in">
-              {districtData.filter(d => d.id === activeDistrict).map(district => (
-                <div key={district.id}>
-                  <h3 className="font-semibold text-lg text-gray-900">{district.name}</h3>
-                  <div className="text-sm space-y-2 mt-2">
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium">Support Level:</span>
-                      <span 
-                        className={`font-medium px-2 py-0.5 rounded-full text-xs ${
-                          district.popularity === "high" ? "bg-green-100 text-green-800" : 
-                          district.popularity === "medium" ? "bg-amber-100 text-amber-800" : 
-                          "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {district.popularity === "high" ? "Strong" : 
-                         district.popularity === "medium" ? "Moderate" : "Needs Attention"}
-                      </span>
-                    </div>
-                    <p><span className="font-medium">Supporters:</span> {(district.supporters / 1000000).toFixed(1)}M ({getSupporterPercentage(district.supporters)}%)</p>
-                    <p><span className="font-medium">Coordinators:</span> {district.coordinators}</p>
-                    <div className="mt-3 pt-2 border-t border-gray-200">
-                      <div className="flex justify-between text-xs text-gray-500 mb-1">
-                        <span>Support Level</span>
-                        <span>{getSupporterPercentage(district.supporters)}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-1.5">
-                        <div 
-                          className="h-1.5 rounded-full" 
-                          style={{
-                            width: `${getSupporterPercentage(district.supporters)}%`,
-                            backgroundColor: district.baseColor
-                          }}
-                        ></div>
-                      </div>
-                    </div>
+
+          {/* Hover info panel */}
+          {activeDivision && !compareMode && (
+            <div className="absolute top-4 right-4 bg-[#111827]/95 border border-green-900/60 p-4 rounded-xl shadow-xl max-w-[230px] animate-fade-in backdrop-blur-sm">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-bold text-white text-base">{activeDivision.name}</h3>
+                <span
+                  className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                    getSupporterPct(activeDivision) >= 60
+                      ? "bg-green-900/80 text-green-300"
+                      : getSupporterPct(activeDivision) >= 40
+                      ? "bg-yellow-900/80 text-yellow-300"
+                      : "bg-red-900/80 text-red-300"
+                  }`}
+                >
+                  {getSupporterPct(activeDivision) >= 60
+                    ? "STRONG"
+                    : getSupporterPct(activeDivision) >= 40
+                    ? "MODERATE"
+                    : "LOW"}
+                </span>
+              </div>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between text-gray-400">
+                  <span>Supporters</span>
+                  <span className="text-white font-medium">
+                    {(activeDivision.supporters / 1_000_000).toFixed(2)}M
+                  </span>
+                </div>
+                <div className="flex justify-between text-gray-400">
+                  <span>Total Voters</span>
+                  <span className="text-white font-medium">
+                    {(activeDivision.totalVoters / 1_000_000).toFixed(1)}M
+                  </span>
+                </div>
+                <div className="flex justify-between text-gray-400">
+                  <span>Coordinators</span>
+                  <span className="text-white font-medium">{activeDivision.coordinators}</span>
+                </div>
+                {/* Progress bar */}
+                <div className="pt-1">
+                  <div className="flex justify-between text-gray-500 mb-1">
+                    <span>Support Rate</span>
+                    <span className="text-green-400 font-semibold">
+                      {getSupporterPct(activeDivision)}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-[#1f2937] rounded-full h-1.5">
+                    <div
+                      className="h-1.5 rounded-full transition-all duration-500"
+                      style={{
+                        width: `${getSupporterPct(activeDivision)}%`,
+                        background:
+                          getSupporterPct(activeDivision) >= 60
+                            ? "linear-gradient(90deg,#16a34a,#4ade80)"
+                            : getSupporterPct(activeDivision) >= 40
+                            ? "linear-gradient(90deg,#b45309,#fbbf24)"
+                            : "linear-gradient(90deg,#b91c1c,#f87171)",
+                      }}
+                    />
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
           )}
-          
-          {/* Compare overlay */}
+
+          {/* Compare panel */}
           {compareMode && selectedDistricts.length > 0 && (
-            <div className="absolute top-4 right-4 bg-white/95 p-4 rounded-lg shadow-lg border border-gray-200 max-w-md animate-fade-in">
-              <h3 className="font-semibold text-lg text-gray-900 mb-3">District Comparison</h3>
-              <div className="space-y-4">
-                <div className="grid grid-cols-4 gap-2 text-xs font-medium">
-                  <div className="col-span-1"></div>
-                  {selectedDistricts.map(id => (
-                    <div key={id} className="text-center">
-                      {districtData.find(d => d.id === id)?.name}
-                    </div>
-                  ))}
-                </div>
-                <div className="grid grid-cols-4 gap-2 text-xs">
-                  <div className="col-span-1 font-medium">Support %</div>
-                  {selectedDistricts.map(id => {
-                    const district = districtData.find(d => d.id === id);
-                    return (
-                      <div key={`${id}-support`} className="text-center">
-                        {district ? getSupporterPercentage(district.supporters) : 0}%
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="grid grid-cols-4 gap-2 text-xs">
-                  <div className="col-span-1 font-medium">Supporters</div>
-                  {selectedDistricts.map(id => {
-                    const district = districtData.find(d => d.id === id);
-                    return (
-                      <div key={`${id}-supporters`} className="text-center">
-                        {district ? (district.supporters / 1000000).toFixed(1) : 0}M
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="grid grid-cols-4 gap-2 text-xs">
-                  <div className="col-span-1 font-medium">Coordinators</div>
-                  {selectedDistricts.map(id => {
-                    const district = districtData.find(d => d.id === id);
-                    return (
-                      <div key={`${id}-coordinators`} className="text-center">
-                        {district?.coordinators || 0}
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="grid grid-cols-4 gap-2 text-xs">
-                  <div className="col-span-1 font-medium">Status</div>
-                  {selectedDistricts.map(id => {
-                    const district = districtData.find(d => d.id === id);
-                    return (
-                      <div key={`${id}-status`} className="text-center">
-                        <span 
-                          className={`font-medium px-2 py-0.5 rounded-full text-xs inline-block ${
-                            district?.popularity === "high" ? "bg-green-100 text-green-800" : 
-                            district?.popularity === "medium" ? "bg-amber-100 text-amber-800" : 
-                            "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {district?.popularity === "high" ? "Strong" : 
-                           district?.popularity === "medium" ? "Moderate" : "Weak"}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
+            <div className="absolute top-4 right-4 bg-[#111827]/95 border border-green-900/60 p-4 rounded-xl shadow-xl max-w-sm animate-fade-in backdrop-blur-sm">
+              <h3 className="font-bold text-white text-sm mb-3">Division Comparison</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="text-gray-500 border-b border-[#1f2937]">
+                      <th className="text-left pb-2 pr-2">Metric</th>
+                      {selectedDistricts.map((id) => (
+                        <th key={id} className="text-center pb-2 px-1 text-green-400">
+                          {divisionsData.find((d) => d.id === id)?.name}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="text-gray-300 divide-y divide-[#1f2937]">
+                    {[
+                      {
+                        label: "Support %",
+                        fn: (id: string) => {
+                          const d = divisionsData.find((x) => x.id === id);
+                          return d ? `${getSupporterPct(d)}%` : "-";
+                        },
+                      },
+                      {
+                        label: "Supporters",
+                        fn: (id: string) => {
+                          const d = divisionsData.find((x) => x.id === id);
+                          return d ? `${(d.supporters / 1_000_000).toFixed(1)}M` : "-";
+                        },
+                      },
+                      {
+                        label: "Coordinators",
+                        fn: (id: string) => {
+                          const d = divisionsData.find((x) => x.id === id);
+                          return d ? String(d.coordinators) : "-";
+                        },
+                      },
+                    ].map((row) => (
+                      <tr key={row.label}>
+                        <td className="py-1.5 pr-2 text-gray-500 font-medium">{row.label}</td>
+                        {selectedDistricts.map((id) => (
+                          <td key={id} className="text-center py-1.5 px-1">
+                            {row.fn(id)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
-          
-          {/* Map Legend */}
-          <div className="absolute bottom-4 left-4 bg-white/80 p-3 rounded-lg shadow-sm border border-gray-200">
-            <div className="flex items-center gap-2 mb-2">
-              <Map className="h-4 w-4 text-muted-foreground" />
-              {compareMode ? (
-                <p className="text-sm text-muted-foreground">Click on districts to compare (max 3)</p>
-              ) : (
-                <p className="text-sm text-muted-foreground">Hover over districts to see details</p>
-              )}
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-full bg-[#f59e0b]"></div>
-                <span className="text-xs">Strong</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-full bg-[#f97316]"></div>
-                <span className="text-xs">Moderate</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-full bg-[#ef4444]"></div>
-                <span className="text-xs">Low</span>
-              </div>
-            </div>
+
+          {/* Bottom hint bar */}
+          <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-[#111827]/80 border border-[#1f2937] px-3 py-2 rounded-lg backdrop-blur-sm">
+            <Map className="h-3.5 w-3.5 text-green-500" />
+            <span className="text-[11px] text-gray-400">
+              {compareMode
+                ? "Click divisions to compare (max 3)"
+                : "Hover over dot clusters to see details"}
+            </span>
           </div>
         </div>
       </CardContent>
-      
+
       {/* Export Dialog */}
       <Dialog open={exportDialogOpen} onOpenChange={setExportDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[400px] bg-[#111827] border-[#1f2937] text-white">
           <DialogHeader>
-            <DialogTitle>Export Map Data</DialogTitle>
+            <DialogTitle className="text-white">Export Map Data</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium">Choose export format:</h3>
-              <div className="grid grid-cols-2 gap-2">
-                <Button onClick={() => handleExport("PNG")} variant="outline">
+          <div className="grid gap-3 py-4">
+            <p className="text-sm text-gray-400">Choose export format:</p>
+            <div className="grid grid-cols-2 gap-2">
+              {["PNG", "PDF", "CSV", "Excel"].map((fmt) => (
+                <Button
+                  key={fmt}
+                  onClick={() => handleExport(fmt)}
+                  variant="outline"
+                  className="border-[#374151] bg-[#1f2937] text-gray-300 hover:bg-[#374151] hover:text-white"
+                >
                   <Download className="h-4 w-4 mr-2" />
-                  PNG Image
+                  {fmt}
                 </Button>
-                <Button onClick={() => handleExport("PDF")} variant="outline">
-                  <Download className="h-4 w-4 mr-2" />
-                  PDF Document
-                </Button>
-                <Button onClick={() => handleExport("CSV")} variant="outline">
-                  <Download className="h-4 w-4 mr-2" />
-                  CSV Data
-                </Button>
-                <Button onClick={() => handleExport("Excel")} variant="outline">
-                  <Download className="h-4 w-4 mr-2" />
-                  Excel Data
-                </Button>
-              </div>
+              ))}
             </div>
           </div>
         </DialogContent>
