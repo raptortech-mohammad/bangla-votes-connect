@@ -1,137 +1,167 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, Calendar, UserCheck, LineChart, Settings, Database, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+import {
+  LayoutDashboard, Users, Calendar, UserCheck, LineChart,
+  Settings, Database, Facebook, Instagram, Twitter, Linkedin,
+} from "lucide-react";
+
 interface SidebarProps {
   collapsed: boolean;
 }
+
+const navColors: Record<string, { bg: string; text: string; hover: string }> = {
+  Dashboard:    { bg: "bg-rose-50",    text: "text-rose-600",    hover: "hover:bg-rose-100" },
+  Contacts:     { bg: "bg-blue-50",    text: "text-blue-600",    hover: "hover:bg-blue-100" },
+  Campaigns:    { bg: "bg-amber-50",   text: "text-amber-600",   hover: "hover:bg-amber-100" },
+  Volunteers:   { bg: "bg-emerald-50", text: "text-emerald-600", hover: "hover:bg-emerald-100" },
+  "Data Tools": { bg: "bg-violet-50",  text: "text-violet-600",  hover: "hover:bg-violet-100" },
+  "Social Media":{ bg: "bg-sky-50",    text: "text-sky-600",     hover: "hover:bg-sky-100" },
+  Analytics:    { bg: "bg-orange-50",  text: "text-orange-600",  hover: "hover:bg-orange-100" },
+  Settings:     { bg: "bg-slate-50",   text: "text-slate-600",   hover: "hover:bg-slate-100" },
+};
+
+const navIconColors: Record<string, string> = {
+  Dashboard:    "text-rose-500",
+  Contacts:     "text-blue-500",
+  Campaigns:    "text-amber-500",
+  Volunteers:   "text-emerald-500",
+  "Data Tools": "text-violet-500",
+  "Social Media":"text-sky-500",
+  Analytics:    "text-orange-500",
+  Settings:     "text-slate-500",
+};
+
 interface NavItemProps {
   to: string;
   icon: React.ReactNode;
   label: string;
   collapsed: boolean;
   active: boolean;
-  subItems?: {
-    to: string;
-    label: string;
-    icon?: React.ReactNode;
-  }[];
+  subItems?: { to: string; label: string; icon?: React.ReactNode }[];
 }
-const NavItem: React.FC<NavItemProps> = ({
-  to,
-  icon,
-  label,
-  collapsed,
-  active,
-  subItems
-}) => {
+
+const NavItem: React.FC<NavItemProps> = ({ to, icon, label, collapsed, active, subItems }) => {
   const location = useLocation();
   const [expanded, setExpanded] = React.useState(active);
   const hasActiveSubItem = subItems?.some(item => location.pathname === item.to);
   const isActive = active || hasActiveSubItem;
-  return <div>
-      <Link to={to} className={cn("flex items-center py-3 px-4 rounded-md transition-all duration-200", collapsed ? "justify-center px-2" : "pr-6", isActive ? "bg-white text-sidebar-primary-foreground" : "text-sidebar-foreground hover:bg-white/20")} onClick={() => {
-      if (subItems && !collapsed) {
-        setExpanded(!expanded);
-      }
-    }}>
-        <span className="mr-3">{icon}</span>
-        {!collapsed && <span className="font-medium">{label}</span>}
+  const colors = navColors[label] || { bg: "bg-muted", text: "text-foreground", hover: "hover:bg-muted" };
+  const iconColor = navIconColors[label] || "text-muted-foreground";
+
+  return (
+    <div>
+      <Link
+        to={to}
+        className={cn(
+          "flex items-center py-2.5 px-3 rounded-lg transition-all duration-200 group",
+          collapsed ? "justify-center px-2" : "pr-4",
+          isActive
+            ? `${colors.bg} ${colors.text} font-semibold shadow-sm`
+            : `text-sidebar-foreground ${colors.hover}`
+        )}
+        onClick={() => {
+          if (subItems && !collapsed) setExpanded(!expanded);
+        }}
+      >
+        <span className={cn("mr-3 transition-colors", isActive ? iconColor : "text-sidebar-foreground group-hover:" + iconColor)}>
+          {icon}
+        </span>
+        {!collapsed && <span className="text-sm">{label}</span>}
       </Link>
-      
-      {subItems && expanded && !collapsed && <div className="ml-10 mt-1 space-y-1">
-          {subItems.map(subItem => <Link key={subItem.to} to={subItem.to} className={cn("flex items-center py-2 px-3 rounded-md text-sm transition-all duration-200", location.pathname === subItem.to ? "bg-white/10 text-white" : "text-white/80 hover:bg-white/10")}>
+
+      {subItems && expanded && !collapsed && (
+        <div className="ml-9 mt-1 space-y-0.5">
+          {subItems.map(subItem => (
+            <Link
+              key={subItem.to}
+              to={subItem.to}
+              className={cn(
+                "flex items-center py-2 px-3 rounded-md text-xs transition-all duration-200",
+                location.pathname === subItem.to
+                  ? `${colors.bg} ${colors.text} font-medium`
+                  : `text-muted-foreground ${colors.hover}`
+              )}
+            >
               {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
               <span>{subItem.label}</span>
-            </Link>)}
-        </div>}
-    </div>;
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
-export const Sidebar: React.FC<SidebarProps> = ({
-  collapsed
-}) => {
+
+export const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
   const location = useLocation();
-  const navigationItems = [{
-    to: "/",
-    icon: <LayoutDashboard size={20} />,
-    label: "Dashboard"
-  }, {
-    to: "/contacts",
-    icon: <Users size={20} />,
-    label: "Contacts"
-  }, {
-    to: "/campaigns",
-    icon: <Calendar size={20} />,
-    label: "Campaigns"
-  }, {
-    to: "/volunteers",
-    icon: <UserCheck size={20} />,
-    label: "Volunteers"
-  }, {
-    to: "/data-tools",
-    icon: <Database size={20} />,
-    label: "Data Tools"
-  }, {
-    to: "/social-media",
-    icon: <Facebook size={20} />,
-    label: "Social Media",
-    subItems: [{
+
+  const navigationItems = [
+    { to: "/", icon: <LayoutDashboard size={20} />, label: "Dashboard" },
+    { to: "/contacts", icon: <Users size={20} />, label: "Contacts" },
+    { to: "/campaigns", icon: <Calendar size={20} />, label: "Campaigns" },
+    { to: "/volunteers", icon: <UserCheck size={20} />, label: "Volunteers" },
+    { to: "/data-tools", icon: <Database size={20} />, label: "Data Tools" },
+    {
       to: "/social-media",
-      label: "Dashboard",
-      icon: <LayoutDashboard size={16} />
-    }, {
-      to: "/social-media?tab=facebook",
-      label: "Facebook",
-      icon: <Facebook size={16} />
-    }, {
-      to: "/social-media?tab=instagram",
-      label: "Instagram",
-      icon: <Instagram size={16} />
-    }, {
-      to: "/social-media?tab=twitter",
-      label: "Twitter",
-      icon: <Twitter size={16} />
-    }, {
-      to: "/social-media?tab=linkedin",
-      label: "LinkedIn",
-      icon: <Linkedin size={16} />
-    }]
-  }, {
-    to: "/analytics",
-    icon: <LineChart size={20} />,
-    label: "Analytics"
-  }, {
-    to: "/settings",
-    icon: <Settings size={20} />,
-    label: "Settings"
-  }];
-  return <div className="h-full bg-sidebar fixed w-64 shadow-lg z-10 flex flex-col transition-all duration-300 ease-in-out">
-      <div className="p-4 border-b border-white/20 flex items-center justify-center rounded px-0 py-[13px]">
-        {collapsed ? <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white">
-            <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="w-8 h-8 object-contain" />
-          </div> : <div className="flex items-center justify-center p-2 rounded-md bg-[#d21e2d] py-0 px-[22px] my-0 mx-[57px]">
-            <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="h-8 object-contain" />
-            <div className="ml-2 my-0 rounded-sm mx-0">
-              <h1 className="text-brand-red text-slate-50 my-0 py-0 text-base font-semibold px-0 mx-[15px] text-left">BANGLADESH
-NATIONALIST
-PARTY</h1>
-              <p className="text-gray-200 text-xs px-[7px] py-0 text-left"></p>
+      icon: <Facebook size={20} />,
+      label: "Social Media",
+      subItems: [
+        { to: "/social-media", label: "Dashboard", icon: <LayoutDashboard size={14} /> },
+        { to: "/social-media?tab=facebook", label: "Facebook", icon: <Facebook size={14} /> },
+        { to: "/social-media?tab=instagram", label: "Instagram", icon: <Instagram size={14} /> },
+        { to: "/social-media?tab=twitter", label: "Twitter", icon: <Twitter size={14} /> },
+        { to: "/social-media?tab=linkedin", label: "LinkedIn", icon: <Linkedin size={14} /> },
+      ],
+    },
+    { to: "/analytics", icon: <LineChart size={20} />, label: "Analytics" },
+    { to: "/settings", icon: <Settings size={20} />, label: "Settings" },
+  ];
+
+  return (
+    <div className="h-full bg-white fixed w-64 border-r border-sidebar-border z-10 flex flex-col transition-all duration-300 ease-in-out">
+      {/* Logo */}
+      <div className="p-4 border-b border-sidebar-border flex items-center justify-center">
+        {collapsed ? (
+          <div className="w-10 h-10 flex items-center justify-center rounded-full bg-primary">
+            <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="w-7 h-7 object-contain" />
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary shadow-md">
+              <img src="/lovable-uploads/32bed45b-da2a-4836-b315-eb6705b8b10b.png" alt="BNP Logo" className="w-7 h-7 object-contain" />
             </div>
-          </div>}
+            <div>
+              <h1 className="text-sm font-bold text-foreground leading-tight">BANGLADESH<br/>NATIONALIST PARTY</h1>
+            </div>
+          </div>
+        )}
       </div>
 
-      <nav className="flex-1 p-2">
+      {/* Navigation */}
+      <nav className="flex-1 p-3 overflow-y-auto">
         <ul className="space-y-1">
-          {navigationItems.map(item => <li key={item.to}>
-              <NavItem to={item.to} icon={item.icon} label={item.label} collapsed={collapsed} active={location.pathname === item.to} subItems={item.subItems} />
-            </li>)}
+          {navigationItems.map(item => (
+            <li key={item.to}>
+              <NavItem
+                to={item.to}
+                icon={item.icon}
+                label={item.label}
+                collapsed={collapsed}
+                active={location.pathname === item.to}
+                subItems={(item as any).subItems}
+              />
+            </li>
+          ))}
         </ul>
       </nav>
 
-      <div className="p-4 border-t border-white/20">
-        {!collapsed && <div className="text-white/70 text-xs">
-            <p>Version 1.0.0</p>
-          </div>}
+      {/* Footer */}
+      <div className="p-4 border-t border-sidebar-border">
+        {!collapsed && (
+          <p className="text-xs text-muted-foreground">Version 1.0.0</p>
+        )}
       </div>
-    </div>;
+    </div>
+  );
 };
